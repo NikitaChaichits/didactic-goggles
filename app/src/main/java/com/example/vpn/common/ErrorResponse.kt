@@ -1,4 +1,4 @@
-package com.baseproject.data.model.pojo.common.error
+package com.example.vpn.common
 
 import com.google.gson.annotations.SerializedName
 

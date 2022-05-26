@@ -2,14 +2,8 @@
 
     <!-- Common strings -->
 
-    <string name="app_name">Base Project</string>
-    <string name="email_example">example@mail.com</string>
-    <string name="password_example">•••••••</string>
-    <string name="date_example">03 Apr, 2020</string>
+    <string name="app_name">App name</string>
     <string name="tap_to_exit">Press Back again to exit.</string>
-    <string name="not_available">This feature will be available later…</string>
-    <string name="close_caps">CLOSE</string>
-    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
     <!-- Errors -->

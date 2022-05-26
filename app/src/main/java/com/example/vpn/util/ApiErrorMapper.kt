@@ -1,6 +1,6 @@
 package com.example.vpn.util
 
-import com.baseproject.data.model.pojo.common.error.ErrorResponse
+import com.example.vpn.common.ErrorResponse
 import com.example.vpn.common.ApplicationError
 import com.google.gson.Gson
 import retrofit2.HttpException
