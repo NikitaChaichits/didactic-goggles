@@ -1,0 +1,48 @@
+<resources>
+
+    <!-- Common strings -->
+
+    <string name="app_name">Base Project</string>
+    <string name="email_example">example@mail.com</string>
+    <string name="password_example">•••••••</string>
+    <string name="date_example">03 Apr, 2020</string>
+    <string name="tap_to_exit">Press Back again to exit.</string>
+    <string name="not_available">This feature will be available later…</string>
+    <string name="close_caps">CLOSE</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Errors -->
+
+    <string name="generic_error">Something went wrong. Please try later.</string>
+    <string name="server_error">Server error. Please try later.</string>
+    <string name="timeout_error">Timeout error. Please try again when network stabilizes.</string>
+    <string name="noInternetConnection_error">No internet connection. Please check the internet.</string>
+    <string name="unauthorized_error">Unauthorized error. Please sign-in and try again.</string>
+    <string name="notFound_error">404 error. Please try later.</string>
+    <string name="badRequest_error">400 error. Bad request. Please try later.</string>
+    <string name="emptyField_error">This field must not be empty.</string>
+    <string name="userNotExist_error">User does not exist</string>
+    <string name="invalidLogin_error">Invalid Login.</string>
+    <string name="weakPassword_error">Your password must be at least 8 characters long and consist of a number and uppercase and lowercase letters.</string>
+    <string name="passwordReset_error">Error resetting password. Please try later.</string>
+    <string name="passwordReset_linkExpires_error">Your link has expired. Please request a new link.</string>
+    <string name="password_doesNot_match_error">Password does not match</string>
+    <string name="passwordForgot_error">Error restoring access. Please try later.</string>
+    <string name="no_photos_error">Photo required.</string>
+
+    <!-- Permission -->
+
+    <string name="save_file_permission_error">To download a file, you must obtain permission to write to the phone storage.</string>
+    <string name="image_picker_permission_error">To set image profile, you must obtain permission to read to the phone storage.</string>
+
+    <!-- Notifications -->
+    <string name="notifications_time_now">now</string>
+    <string name="notifications_time_yesterday">yesterday</string>
+    <string name="notifications_time_minute">minute</string>
+    <string name="notifications_time_hour">hour</string>
+
+    <!-- Fragment Login -->
+    <string name="login">login</string>
+
+</resources>

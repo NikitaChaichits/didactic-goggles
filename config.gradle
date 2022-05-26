@@ -1,0 +1,54 @@
+/**
+ * This file defines configuration for all project
+ */
+
+ext {
+
+    /**
+     * Common configuration for all project
+     */
+
+    globalConfig = [
+            compileSdkVersion: 31,
+            minSdkVersion    : 28,
+            targetSdkVersion : 31,
+            buildToolsVersion: "30.0.3"
+    ]
+
+    /**
+     * Configuration for app module
+     */
+
+    def appVersionMajor = 1
+    def appVersionPatch = 0
+    def appVersionBuild = 0
+
+    appConfig = [
+
+            applicationId  : 'com.example.vpn',
+
+            versionName    : generateVersionName(appVersionMajor, appVersionPatch, appVersionBuild),
+            versionCode    : generateVersionCode(appVersionMajor, appVersionPatch, appVersionBuild),
+            versionBuild   : appVersionBuild,
+
+//            keyAlias       : keysProperties['keyAlias'],
+//            keyPassword    : keysProperties['keyPassword'],
+//            storeFile      : file(keysProperties['storeFile']),
+//            storePassword  : keysProperties['storePassword'],
+
+            devUrl : "https://{subdomain}.conrento-dev.de",
+            prodUrl: "https://{subdomain}.production.com"
+    ]
+}
+
+/**
+ * Versions calculations
+ */
+
+static Integer generateVersionCode(versionMajor, versionPatch, versionBuild) {
+    return versionMajor * 100 + versionPatch * 10 + versionBuild
+}
+
+static String generateVersionName(versionMajor, versionPatch, versionBuild) {
+    return "${versionMajor}.${versionPatch}.${versionBuild}"
+}

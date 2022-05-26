@@ -1,0 +1,114 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id("dagger.hilt.android.plugin")
+}
+
+android {
+
+    flavorDimensions "mode"
+    compileSdkVersion globalConfig.compileSdkVersion
+    buildToolsVersion globalConfig.buildToolsVersion
+
+    defaultConfig {
+        applicationId appConfig.applicationId
+        minSdkVersion globalConfig.minSdkVersion
+        targetSdkVersion globalConfig.targetSdkVersion
+        versionCode appConfig.versionCode
+        versionName appConfig.versionName
+    }
+
+//    signingConfigs {
+//        release {
+//            keyAlias appConfig.keyAlias
+//            keyPassword appConfig.keyPassword
+//            storeFile appConfig.storeFile
+//            storePassword appConfig.storePassword
+//        }
+//    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+//            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            applicationIdSuffix ".debug"
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+
+    // Common
+    api globalDependencies.coreKtx
+    api appDependencies.constraintLayout
+    api appDependencies.recyclerView
+    api appDependencies.lifecycleViewmodelKtx
+    api appDependencies.lifecycleLivedataKtx
+    api appDependencies.lifecycleRuntime
+    api appDependencies.cardView
+    api appDependencies.navigationFragmentKtx
+    api appDependencies.navigationUiKtx
+    api appDependencies.activityKtx
+    api appDependencies.fragmentKtx
+    api appDependencies.glideBase
+    api appDependencies.material
+
+    // Material dialogs
+    api appDependencies.materialDialogsCore
+    api appDependencies.materialDialogsLifecycle
+
+    // DI
+    api appDependencies.hiltAndroid
+    kapt appDependencies.hiltAndroidCompiler
+
+    // Gson
+    api appDependencies.gson
+
+    // Retrofit2
+    api appDependencies.retrofit
+    api appDependencies.retrofitConverterGson
+
+    // OkHttp3
+    api appDependencies.okHttp
+    api appDependencies.okHttpLoggingInterceptor
+
+    // Kotlin Coroutines
+    api appDependencies.coroutinesCore
+    api appDependencies.coroutinesAndroid
+
+    // WorkManager with coroutines
+    api appDependencies.coroutineWorkManager
+
+    // View Binding property buster
+    implementation appDependencies.viewBindingPropertyDelegate
+}
+
+android.applicationVariants.all { variant ->
+    variant.resValue "string", "app_version", "${appConfig.versionName} (${appConfig.build})"
+    variant.outputs.all { outputFileName = "${variant.name}-v${variant.versionCode}.apk" }
+}
+
+kapt {
+    correctErrorTypes = true
+}

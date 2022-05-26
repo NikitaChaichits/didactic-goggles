@@ -1,0 +1,83 @@
+/**
+ * This file defines all project dependencies
+ */
+
+def libraryVersions = [
+
+        androidGradlePluginVersion: '7.2.0',
+        kotlinGradlePluginVersion : '1.5.0',
+
+        coreKtxVersion            : '1.7.0',
+        constraintLayoutVersion   : '2.2.0-alpha01',
+        recyclerViewVersion       : '1.2.1',
+        lifecycleVersion          : '2.5.0-rc01',
+        materialVersion           : '1.6.0',
+        cardViewVersion           : '1.0.0',
+        materialDialogs           : '3.3.0',
+
+        navigationVersion         : '2.4.2',
+        hilt                      : '2.42',
+        ktxActivityVersion        : '1.4.0',
+        ktxFragmentVersion        : '1.4.1',
+        glide                     : '4.13.2',
+        coroutineWorkManager      : '2.7.1',
+
+        retrofitVersion           : '2.9.0',
+        okHttpVersion             : '5.0.0-alpha.7',
+        gsonVersion               : '2.9.0',
+
+        coroutineVersion          : '1.6.1-native-mt',
+        viewBindingPropertyDelegate  : '1.5.6',
+]
+
+ext {
+
+    /**
+     * Common dependencies for all project
+     */
+
+    globalDependencies = [
+            androidGradlePlugin     : "com.android.tools.build:gradle:${libraryVersions.androidGradlePluginVersion}",
+            kotlinGradlePlugin      : "org.jetbrains.kotlin:kotlin-gradle-plugin:${libraryVersions.kotlinGradlePluginVersion}",
+            coreKtx                 : "androidx.core:core-ktx:${libraryVersions.coreKtxVersion}",
+            hiltAndroidPlugin       : "com.google.dagger:hilt-android-gradle-plugin:${libraryVersions.hilt}",
+    ]
+
+    /**
+     * Dependencies for app module
+     */
+
+    appDependencies = [
+
+            constraintLayout        : "androidx.constraintlayout:constraintlayout:${libraryVersions.constraintLayoutVersion}",
+            recyclerView            : "androidx.recyclerview:recyclerview:${libraryVersions.recyclerViewVersion}",
+            lifecycleViewmodelKtx   : "androidx.lifecycle:lifecycle-viewmodel-ktx:${libraryVersions.lifecycleVersion}",
+            lifecycleLivedataKtx    : "androidx.lifecycle:lifecycle-livedata-ktx:${libraryVersions.lifecycleVersion}",
+            lifecycleRuntime        : "androidx.lifecycle:lifecycle-runtime-ktx:${libraryVersions.lifecycleVersion}",
+            cardView                : "androidx.cardview:cardview:${libraryVersions.cardViewVersion}",
+            navigationFragmentKtx   : "androidx.navigation:navigation-fragment-ktx:${libraryVersions.navigationVersion}",
+            navigationUiKtx         : "androidx.navigation:navigation-ui-ktx:${libraryVersions.navigationVersion}",
+            activityKtx             : "androidx.activity:activity-ktx:${libraryVersions.ktxActivityVersion}",
+            fragmentKtx             : "androidx.fragment:fragment-ktx:${libraryVersions.ktxFragmentVersion}",
+            material                : "com.google.android.material:material:${libraryVersions.materialVersion}",
+            glideBase               : "com.github.bumptech.glide:glide:${libraryVersions.glide}",
+            coroutineWorkManager    : "androidx.work:work-runtime-ktx:${libraryVersions.coroutineWorkManager}",
+
+            materialDialogsCore     : "com.afollestad.material-dialogs:core:${libraryVersions.materialDialogs}",
+            materialDialogsLifecycle: "com.afollestad.material-dialogs:lifecycle:${libraryVersions.materialDialogs}",
+
+            gson                    : "com.google.code.gson:gson:${libraryVersions.gsonVersion}",
+            retrofit                : "com.squareup.retrofit2:retrofit:${libraryVersions.retrofitVersion}",
+            retrofitConverterGson   : "com.squareup.retrofit2:converter-gson:${libraryVersions.retrofitVersion}",
+            okHttp                  : "com.squareup.okhttp3:okhttp:${libraryVersions.okHttpVersion}",
+            okHttpLoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:${libraryVersions.okHttpVersion}",
+
+            coroutinesCore          : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${libraryVersions.coroutineVersion}",
+            coroutinesAndroid       : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${libraryVersions.coroutineVersion}",
+
+            hiltAndroid             : "com.google.dagger:hilt-android:${libraryVersions.hilt}",
+            hiltAndroidCompiler     : "com.google.dagger:hilt-android-compiler:${libraryVersions.hilt}",
+
+            viewBindingPropertyDelegate: "com.github.kirich1409:viewbindingpropertydelegate-noreflection:${libraryVersions.viewBindingPropertyDelegate}",
+    ]
+}
