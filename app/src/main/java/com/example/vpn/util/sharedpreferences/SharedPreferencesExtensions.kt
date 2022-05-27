@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.example.vpn.util
+package com.example.vpn.util.sharedpreferences
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences

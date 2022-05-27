@@ -5,5 +5,13 @@
     android:background="@drawable/ic_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="150dp"
+        app:srcCompat="@drawable/ic_cyberself" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

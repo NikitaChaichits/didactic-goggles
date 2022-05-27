@@ -1,9 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/ic_background"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TextAppearance.TextViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_5xl"
+        android:text="@string/fr_privacy_title"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvText"
+        style="@style/TextAppearance.TextViewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_3xl"
+        android:text="@string/fr_privacy_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivDot1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_2xl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvText"
+        app:srcCompat="@drawable/ic_dot_li" />
+
+    <TextView
+        android:id="@+id/tvHtmlText1"
+        style="@style/TextAppearance.TextViewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_s"
+        android:layout_marginEnd="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_m"
+        android:text="@string/fr_privacy_li_text_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivDot1"
+        app:layout_constraintTop_toBottomOf="@id/tvText" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivDot2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_xl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHtmlText1"
+        app:srcCompat="@drawable/ic_dot_li" />
+
+    <TextView
+        android:id="@+id/tvHtmlText2"
+        style="@style/TextAppearance.TextViewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_s"
+        android:layout_marginEnd="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_s"
+        android:text="@string/fr_privacy_li_text_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivDot2"
+        app:layout_constraintTop_toBottomOf="@id/tvHtmlText1" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivDot3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_xl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHtmlText2"
+        app:srcCompat="@drawable/ic_dot_li" />
+
+    <TextView
+        android:id="@+id/tvHtmlText3"
+        style="@style/TextAppearance.TextViewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_s"
+        android:layout_marginEnd="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_s"
+        android:text="@string/fr_privacy_li_text_3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivDot2"
+        app:layout_constraintTop_toBottomOf="@id/tvHtmlText2" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivDot4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_xl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHtmlText3"
+        app:srcCompat="@drawable/ic_dot_li" />
+
+    <TextView
+        android:id="@+id/tvHtmlText4"
+        style="@style/TextAppearance.TextViewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_s"
+        android:layout_marginEnd="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_s"
+        android:text="@string/fr_privacy_li_text_4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivDot2"
+        app:layout_constraintTop_toBottomOf="@id/tvHtmlText3" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContinue"
+        style="@style/Button.RoundedButton.WithArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fr_privacy_btn_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/common_offset_m"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

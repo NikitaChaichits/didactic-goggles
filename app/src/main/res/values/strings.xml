@@ -36,7 +36,26 @@
     <string name="notifications_time_minute">minute</string>
     <string name="notifications_time_hour">hour</string>
 
-    <!-- Fragment Login -->
-    <string name="login">login</string>
+    <!-- Fragment Privacy -->
+    <string name="fr_privacy_title">Your privacy \ncomes first</string>
+    <string name="fr_privacy_text">HotspotShield collects a minimal amount of data to offer you a fast and reliable VPN service.\n\nWe collect:</string>
+    <string name="fr_privacy_li_text_1">Device-specific information like OS version, hardware model, and IP address to optimize our network connection to you. We do not store or log your IP address after you disconnect from the VPN.</string>
+    <string name="fr_privacy_li_text_2">Aggregated anonymous website activity data, to perform analytics on our service and to ensure you can reliably access certain websites or apps</string>
+    <string name="fr_privacy_li_text_3">Total bandwidth consumed and time connected to our VPN service</string>
+    <string name="fr_privacy_li_text_4">Payment information and optional email, when you purchase a paid plan</string>
+    <string name="fr_privacy_btn_text">Accept and continue</string>
 
+    <!-- Fragment Intro -->
+    <string name="fr_intro_title1">Protect your privacy</string>
+    <string name="fr_intro_text1">Protect your internet data\n&amp; information</string>
+    <string name="fr_intro_title2">Premium servers</string>
+    <string name="fr_intro_text2">Connect to 3,200 servers in 90+ countries\nthrough proprietary VPN</string>
+    <string name="fr_intro_btn_text">Continue</string>
+
+    <!-- Fragment Subscription -->
+    <string name="fr_subscription_btn_text">Try fo free</string>
+
+    <!-- Fragment Main -->
+    <string name="fr_main_btn_start">Start</string>
+    <string name="fr_main_btn_stop">Stop</string>
 </resources>

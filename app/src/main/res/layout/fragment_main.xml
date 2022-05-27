@@ -2,8 +2,37 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivBackgroundOff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_background" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btnStartStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivBackgroundOff"
+        app:layout_constraintBottom_toBottomOf="@id/ivBackgroundOff"
+        app:srcCompat="@drawable/ic_circle_start_button" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvBtnName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fr_main_btn_start"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/common_textSize_m"
+        app:layout_constraintStart_toStartOf="@id/btnStartStop"
+        app:layout_constraintEnd_toEndOf="@id/btnStartStop"
+        app:layout_constraintTop_toTopOf="@id/btnStartStop"
+        app:layout_constraintBottom_toBottomOf="@id/btnStartStop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
