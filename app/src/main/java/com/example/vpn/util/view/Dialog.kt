@@ -12,7 +12,7 @@ fun Context.dialogBuilder(owner: LifecycleOwner, title: Int): MaterialDialog {
     return MaterialDialog(this)
         .lifecycleOwner(owner)
         .title(title)
-        .cornerRadius(res = R.dimen.common_radius)
+        .cornerRadius(res = R.dimen.radius_12)
         .cancelOnTouchOutside(cancelable = true)
 }
 

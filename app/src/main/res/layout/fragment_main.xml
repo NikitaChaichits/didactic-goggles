@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/black">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivBackgroundOff"
@@ -13,13 +14,23 @@
         app:srcCompat="@drawable/ic_background" />
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_m"
+        android:layout_marginEnd="@dimen/common_offset_m"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_settings" />
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btnStartStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/ivBackgroundOff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivBackgroundOff"
-        app:layout_constraintBottom_toBottomOf="@id/ivBackgroundOff"
         app:srcCompat="@drawable/ic_circle_start_button" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -28,11 +39,12 @@
         android:layout_height="wrap_content"
         android:text="@string/fr_main_btn_start"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:textSize="@dimen/common_textSize_m"
-        app:layout_constraintStart_toStartOf="@id/btnStartStop"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btnStartStop"
         app:layout_constraintEnd_toEndOf="@id/btnStartStop"
-        app:layout_constraintTop_toTopOf="@id/btnStartStop"
-        app:layout_constraintBottom_toBottomOf="@id/btnStartStop" />
+        app:layout_constraintStart_toStartOf="@id/btnStartStop"
+        app:layout_constraintTop_toTopOf="@id/btnStartStop" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

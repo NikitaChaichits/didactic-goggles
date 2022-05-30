@@ -53,7 +53,18 @@
     <string name="fr_intro_btn_text">Continue</string>
 
     <!-- Fragment Subscription -->
+    <string name="fr_subscription_title">Full access</string>
+    <string name="fr_subscription_subtitle">Start your 3-day free trial.</string>
+    <string name="fr_subscription_purchased">Purchased?</string>
     <string name="fr_subscription_btn_text">Try fo free</string>
+    <string name="fr_subscription_terms">Terms of service &amp; Privacy policy</string>
+    <string name="fr_subscription_type1">Annual</string>
+    <string name="fr_subscription_description1">3 day trial - then 24.99/year.</string>
+    <string name="fr_subscription_type2">Monthly</string>
+    <string name="fr_subscription_description2">3 day trial - then 9.99/month</string>
+    <string name="fr_subscription_type3">Week</string>
+    <string name="fr_subscription_description3">3 day trial - then 2.99/week</string>
+    <string name="fr_subscription_cancel">Cancel Anytime in Google Play</string>
 
     <!-- Fragment Main -->
     <string name="fr_main_btn_start">Start</string>

@@ -15,8 +15,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeViewModel()
+        initListeners()
     }
 
+    private fun initListeners() {
+        binding.ivSettings.setOnClickListener {
+            navigate(R.id.action_main_fragment_to_settings_fragment)
+        }
+    }
 
 }

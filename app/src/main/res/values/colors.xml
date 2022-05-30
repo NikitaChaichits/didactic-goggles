@@ -3,9 +3,9 @@
 
     <!-- Common -->
 
-    <color name="colorPrimary">#5C6BC0</color>
-    <color name="colorPrimaryDark">#7E57C2</color>
-    <color name="colorAccent">#EF5350</color>
+    <color name="colorPrimary">#1A73E9</color>
+    <color name="colorPrimaryDark">#1A73E9</color>
+    <color name="colorAccent">#FF5533</color>
 
     <!-- Other -->
 
@@ -13,5 +13,7 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="grey">#8E8E93</color>
+
+    <color name="grey_dark">#201E22</color>
 
 </resources>

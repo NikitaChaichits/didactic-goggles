@@ -39,7 +39,7 @@ fun ImageView.setCircleImage(
 
 fun ImageView.setImageWithRadius(
     uri: String?,
-    @DimenRes radiusDimen: Int = R.dimen.common_radius
+    @DimenRes radiusDimen: Int = R.dimen.radius_12
 ) {
     val radius: Int = context.resources.getDimension(radiusDimen).toInt()
     Glide.with(context)
