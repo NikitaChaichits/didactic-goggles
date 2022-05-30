@@ -1,9 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_background"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/black">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivBackgroundOff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_background" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_offset_m"
+        android:layout_marginTop="@dimen/common_offset_m"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvPurchased"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_m"
+        android:layout_marginEnd="@dimen/common_offset_m"
+        android:text="@string/fr_subscription_purchased"
+        android:textStyle="bold"
+        android:textSize="@dimen/common_textSize_l"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/ivClose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivClose" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        style="@style/TextAppearance.TextViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75dp"
+        android:gravity="center"
+        android:text="@string/fr_subscription_title"
+        app:layout_constraintTop_toBottomOf="@id/ivClose" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvSubtitle"
+        style="@style/TextAppearance.TextViewSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_s"
+        android:gravity="center"
+        android:text="@string/fr_subscription_subtitle"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <LinearLayout
+        android:id="@+id/llSubscriptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/common_offset_m"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/common_offset_5xl"
+        app:layout_constraintBottom_toTopOf="@id/tvCancel"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
+
+        <com.example.vpn.util.view.Subscription
+            android:id="@+id/subscriptionAnnual"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/common_offset_xs"
+            app:description="@string/fr_subscription_description1"
+            app:isChecked="true"
+            app:name="@string/fr_subscription_type1" />
+
+        <com.example.vpn.util.view.Subscription
+            android:id="@+id/subscriptionMonthly"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/common_offset_xs"
+            app:description="@string/fr_subscription_description2"
+            app:name="@string/fr_subscription_type2" />
+
+        <com.example.vpn.util.view.Subscription
+            android:id="@+id/subscriptionWeek"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:description="@string/fr_subscription_description3"
+            app:name="@string/fr_subscription_type3" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvCancel"
+        style="@style/TextAppearance.TextViewText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/common_offset_s"
+        android:gravity="center"
+        android:text="@string/fr_subscription_cancel"
+        app:layout_constraintBottom_toTopOf="@id/btnContinue" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnContinue"
@@ -25,5 +127,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnContinue"
         app:srcCompat="@drawable/ic_bottom_dots_3" />
+
+    <TextView
+        android:id="@+id/tvTerms"
+        style="@style/TextAppearance.TextViewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_offset_m"
+        android:layout_marginBottom="@dimen/common_offset_xs"
+        android:text="@string/fr_subscription_terms"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivDots2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

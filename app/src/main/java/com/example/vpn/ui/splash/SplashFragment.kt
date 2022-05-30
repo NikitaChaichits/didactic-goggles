@@ -26,10 +26,10 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
 
     private fun checkFirstLaunch() {
         if (prefs.getFirstLaunch()) {
-            findNavController().navigate(R.id.action_splash_fragment_to_privacy_fragment)
+            navigate(R.id.action_splash_fragment_to_privacy_fragment)
 //            prefs.setFirstLaunch(false)
         } else {
-            findNavController().navigate(R.id.action_splash_fragment_to_main_fragment)
+            navigate(R.id.action_splash_fragment_to_main_fragment)
         }
     }
 

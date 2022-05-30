@@ -64,10 +64,6 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
         findNavController().navigate(resId)
     }
 
-    fun navigate(direction: NavDirections) {
-        findNavController().navigate(direction)
-    }
-
     fun navigate(direction: NavDirections, navOptions: NavOptions) {
         findNavController().navigate(direction, navOptions)
     }
