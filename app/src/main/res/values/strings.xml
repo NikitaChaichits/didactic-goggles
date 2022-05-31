@@ -69,4 +69,8 @@
     <!-- Fragment Main -->
     <string name="fr_main_btn_start">Start</string>
     <string name="fr_main_btn_stop">Stop</string>
+
+    <!-- Fragment BottomSheet -->
+    <string name="fr_bottom_title">Virtual location</string>
+    <string name="fr_bottom_best_choice">Best choice</string>
 </resources>
