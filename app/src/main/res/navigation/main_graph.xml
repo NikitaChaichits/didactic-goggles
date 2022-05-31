@@ -66,14 +66,18 @@
         android:name="com.example.vpn.ui.settings.SettingsFragment"
         tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/action_settings_fragment_to_suport_fragment"
+            android:id="@+id/action_settings_fragment_to_support_fragment"
             app:destination="@id/support_fragment" />
         <action
             android:id="@+id/action_settings_fragment_to_speed_test_fragment"
             app:destination="@id/speed_test_fragment" />
         <action
             android:id="@+id/action_settings_fragment_to_subscription_fragment"
-            app:destination="@id/subscription_fragment" />
+            app:destination="@id/subscription_fragment" >
+            <argument
+                android:name="isThreeTypesSubscription"
+                app:argType="boolean"/>
+        </action>
     </fragment>
 
     <fragment

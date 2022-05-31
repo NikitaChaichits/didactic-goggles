@@ -7,4 +7,9 @@
         <attr name="isChecked" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="SettingsItem">
+        <attr name="icon" format="reference" />
+        <attr name="text" format="string"/>
+    </declare-styleable>
+
 </resources>
