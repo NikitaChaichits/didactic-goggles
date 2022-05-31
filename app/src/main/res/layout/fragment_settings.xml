@@ -16,7 +16,7 @@
         app:srcCompat="@drawable/ic_back" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvSettingName"
+        android:id="@+id/tvSettingTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fr_settings"

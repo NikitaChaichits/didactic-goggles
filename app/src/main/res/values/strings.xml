@@ -79,4 +79,10 @@
     <string name="fr_settings_terms">Terms of use</string>
     <string name="fr_settings_rate">Rate app</string>
     <string name="fr_settings_share">Share SmartCrypt</string>
+
+    <!-- Fragment Support -->
+    <string name="fr_support">Support</string>
+    <string name="fr_support_connect">Connect Issues</string>
+    <string name="fr_support_browsing">Slow browsing</string>
+    <string name="fr_support_else">Something else</string>
 </resources>

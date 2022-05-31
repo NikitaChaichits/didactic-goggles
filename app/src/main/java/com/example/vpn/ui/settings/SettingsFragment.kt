@@ -21,9 +21,10 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
     private fun initListeners() {
         binding.btnBack.setOnClickListener { navigateBack() }
         binding.ivBanner.setOnClickListener {
-            val action =
-                SettingsFragmentDirections.actionSettingsFragmentToSubscriptionFragment(true)
-            navigate(action)
+            navigate(SettingsFragmentDirections.actionSettingsFragmentToSubscriptionFragment(true))
+        }
+        binding.btnContactSupport.setOnClickListener {
+            navigate(R.id.action_settings_fragment_to_support_fragment)
         }
     }
 
