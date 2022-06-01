@@ -22,6 +22,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         binding.ivSettings.setOnClickListener {
             navigate(R.id.action_main_fragment_to_settings_fragment)
         }
+        binding.btnStartStop.setOnClickListener {
+            BottomFragment().show(requireActivity().supportFragmentManager, "Bottom Sheet")
+        }
     }
 
 }

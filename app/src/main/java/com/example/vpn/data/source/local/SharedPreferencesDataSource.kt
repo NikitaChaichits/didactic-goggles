@@ -2,10 +2,7 @@ package com.example.vpn.data.source.local
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.vpn.util.sharedpreferences.FIRST_LAUNCH
-import com.example.vpn.util.sharedpreferences.KEY_SHARED_PREFS_NAME
-import com.example.vpn.util.sharedpreferences.get
-import com.example.vpn.util.sharedpreferences.put
+import com.example.vpn.util.sharedpreferences.*
 import javax.inject.Inject
 
 class SharedPreferencesDataSource @Inject constructor(applicationContext: Context) {
@@ -17,4 +14,7 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
 
     fun getFirstLaunch(): Boolean = sharedPrefs.get(FIRST_LAUNCH, true)
 
+    fun setCountryIndex(index: Int) = sharedPrefs.put(COUNTRY_INDEX, index)
+
+    fun getCountryIndex(): Int = sharedPrefs.get(COUNTRY_INDEX, 0)
 }
