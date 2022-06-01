@@ -60,6 +60,8 @@ android {
 
 dependencies {
 
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     // Common
     api globalDependencies.coreKtx
     api appDependencies.constraintLayout
@@ -81,6 +83,7 @@ dependencies {
 
     // DI
     api appDependencies.hiltAndroid
+    implementation project(path: ':vpnLib')
     kapt appDependencies.hiltAndroidCompiler
 
     // Gson
