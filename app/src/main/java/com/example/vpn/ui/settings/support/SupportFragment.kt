@@ -15,7 +15,11 @@ class SupportFragment : BaseFragment(R.layout.fragment_support) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeViewModel()
+        initListeners()
+    }
+
+    private fun initListeners() {
+        binding.btnBack.setOnClickListener { navigateBack() }
     }
 
 }

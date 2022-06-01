@@ -73,4 +73,21 @@
     <!-- Fragment BottomSheet -->
     <string name="fr_bottom_title">Virtual location</string>
     <string name="fr_bottom_best_choice">Best choice</string>
+
+    <!-- Fragment Settings -->
+    <string name="fr_settings">Settings</string>
+    <string name="fr_settings_check_connection">Check connection speed</string>
+    <string name="fr_settings_restore">Restore purchase</string>
+    <string name="fr_settings_contact">Contact support</string>
+    <string name="fr_settings_privacy">Privacy Policy</string>
+    <string name="fr_settings_terms">Terms of use</string>
+    <string name="fr_settings_rate">Rate app</string>
+    <string name="fr_settings_share">Share SmartCrypt</string>
+
+    <!-- Fragment Support -->
+    <string name="fr_support">Support</string>
+    <string name="fr_support_connect">Connect Issues</string>
+    <string name="fr_support_browsing">Slow browsing</string>
+    <string name="fr_support_else">Something else</string>
+
 </resources>
