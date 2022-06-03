@@ -18,6 +18,8 @@ android {
         targetSdkVersion globalConfig.targetSdkVersion
         versionCode appConfig.versionCode
         versionName appConfig.versionName
+
+        buildConfigField("String", "AUTHORIZATION_KEY", authorization_key)
     }
 
 //    signingConfigs {

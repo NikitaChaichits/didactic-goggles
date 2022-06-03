@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vpn.data.model.Country
+import com.example.vpn.domain.model.Country
 import com.example.vpn.databinding.ItemCountryBinding
 
 class BottomSheetAdapter(

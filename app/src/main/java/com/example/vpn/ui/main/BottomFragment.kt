@@ -11,16 +11,18 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vpn.R
 import com.example.vpn.data.list.CountryList
-import com.example.vpn.data.model.Country
+import com.example.vpn.domain.model.Country
 import com.example.vpn.data.source.local.SharedPreferencesDataSource
 import com.example.vpn.databinding.BottomSheetLayoutBinding
 import com.example.vpn.ui.main.adapter.BottomSheetAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 private const val COLLAPSED_HEIGHT = 130
 
+//@AndroidEntryPoint
 class BottomFragment : BottomSheetDialogFragment() {
 
     @Inject
@@ -41,7 +43,12 @@ class BottomFragment : BottomSheetDialogFragment() {
         binding = BottomSheetLayoutBinding.bind(inflater.inflate(R.layout.bottom_sheet_layout, container))
         prefs = SharedPreferencesDataSource(requireContext())
         setCountry(prefs.getCountryIndex())
+        getListFromApi()
         return binding.root
+    }
+
+    private fun getListFromApi() {
+        viewModel.getListFromApi()
     }
 
     override fun onStart() {

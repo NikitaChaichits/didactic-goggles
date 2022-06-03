@@ -1,4 +1,4 @@
-package com.example.vpn.data.model
+package com.example.vpn.domain.model
 
 data class Country(
     val name: String,

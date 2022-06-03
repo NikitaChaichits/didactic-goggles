@@ -10,7 +10,7 @@ ext {
 
     globalConfig = [
             compileSdkVersion: 31,
-            minSdkVersion    : 28,
+            minSdkVersion    : 24,
             targetSdkVersion : 31,
             buildToolsVersion: "30.0.3"
     ]
