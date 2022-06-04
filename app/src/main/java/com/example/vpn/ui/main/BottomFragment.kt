@@ -2,7 +2,6 @@ package com.example.vpn.ui.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,22 +9,19 @@ import android.widget.FrameLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vpn.R
-import com.example.vpn.data.list.CountryList
-import com.example.vpn.domain.model.Country
 import com.example.vpn.data.source.local.SharedPreferencesDataSource
 import com.example.vpn.databinding.BottomSheetLayoutBinding
+import com.example.vpn.domain.model.Country
 import com.example.vpn.ui.main.adapter.BottomSheetAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
-private const val COLLAPSED_HEIGHT = 130
+private const val COLLAPSED_HEIGHT = 112
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class BottomFragment : BottomSheetDialogFragment() {
 
-    @Inject
     lateinit var prefs : SharedPreferencesDataSource
 
     private lateinit var binding: BottomSheetLayoutBinding
@@ -42,13 +38,8 @@ class BottomFragment : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = BottomSheetLayoutBinding.bind(inflater.inflate(R.layout.bottom_sheet_layout, container))
         prefs = SharedPreferencesDataSource(requireContext())
-        setCountry(prefs.getCountryIndex())
-        getListFromApi()
+        viewModel.getListFromApi(prefs.getCountryName())
         return binding.root
-    }
-
-    private fun getListFromApi() {
-        viewModel.getListFromApi()
     }
 
     override fun onStart() {
@@ -99,15 +90,6 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun observeViewModel() {
-        viewModel.countryList.observe(viewLifecycleOwner) { list ->
-            countryList.clear()
-            countryList.addAll(list)
-            adapter.notifyDataSetChanged()
-        }
-    }
-
     private fun setupRecyclerView() {
         binding.rvCountries.adapter = adapter
         binding.rvCountries.layoutManager = LinearLayoutManager(requireContext())
@@ -115,29 +97,48 @@ class BottomFragment : BottomSheetDialogFragment() {
         adapter.submitList(countryList)
     }
 
-    private fun setCountry(itemPosition: Int) {
-        val country = CountryList.list[itemPosition]
-        viewModel.setNewCountryList(country)
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeViewModel() {
+        viewModel.countryList.observe(viewLifecycleOwner) { list ->
+            countryList.clear()
+            countryList.addAll(list)
+            adapter.notifyDataSetChanged()
+
+            if (!list.isNullOrEmpty())
+                setCountry(list, prefs.getCountryName())
+        }
+    }
+
+    private fun setCountry(countryList: List<Country>,countryName: String) {
+        val country = countryList.find { it.shortName == countryName }
+
         setSingleItem(country)
     }
 
     private fun chooseCountry(itemPosition: Int) {
-        prefs.setCountryIndex(itemPosition)
         val country = adapter.currentList[itemPosition]
+        prefs.setCountryName(country.shortName)
         viewModel.setNewCountryList(country)
         setSingleItem(country)
         if (this::behavior.isInitialized)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        Log.d("BottomFragment", "country = $country")
     }
 
-    private fun setSingleItem(country: Country) {
-        binding.include.ivFlag.setImageResource(country.flag)
-        binding.include.tvCountry.text = country.name
+    private fun setSingleItem(country: Country?) {
+        binding.singleItem.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.INVISIBLE
 
-        if (country.name == CountryList.list[0].name)
-            binding.include.tvBestChoice.visibility = View.VISIBLE
-        else
-            binding.include.tvBestChoice.visibility = View.GONE
+        if (country != null){
+            binding.include.ivFlag.setImageResource(country.flag)
+            binding.include.tvCountry.text = country.fullName
+
+            if (country.shortName == "US")
+                binding.include.tvBestChoice.visibility = View.VISIBLE
+            else
+                binding.include.tvBestChoice.visibility = View.GONE
+        } else{
+            binding.include.ivFlag.setImageResource(R.drawable.ic_placeholder)
+            binding.include.tvCountry.text ="Unknown country"
+        }
     }
 }

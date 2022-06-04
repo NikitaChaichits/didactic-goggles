@@ -1,4 +1,4 @@
-package com.example.vpn.domain.model.response
+package com.example.vpn.domain.model
 
 
 data class ConfigResponse(

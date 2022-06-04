@@ -6,11 +6,10 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/common_offset_xs">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_collapsed"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="112dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -20,22 +19,43 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/common_offset_m"
             android:layout_marginTop="22dp"
-            android:layout_marginBottom="@dimen/common_offset_s"
             android:gravity="start|center_vertical"
             android:text="@string/fr_bottom_title"
             android:textColor="#8E8E93"
             android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/item_country"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/singleItem"
+            app:layout_constraintEnd_toEndOf="@+id/singleItem"
+            app:layout_constraintStart_toStartOf="@id/singleItem"
+            app:layout_constraintTop_toTopOf="@+id/singleItem" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        <FrameLayout
+            android:id="@+id/singleItem"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="18dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitleSmall">
+
+            <include
+                android:id="@+id/include"
+                layout="@layout/item_country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <LinearLayout

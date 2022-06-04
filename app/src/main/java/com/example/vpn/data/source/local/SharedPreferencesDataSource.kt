@@ -14,7 +14,7 @@ class SharedPreferencesDataSource @Inject constructor(applicationContext: Contex
 
     fun getFirstLaunch(): Boolean = sharedPrefs.get(FIRST_LAUNCH, true)
 
-    fun setCountryIndex(index: Int) = sharedPrefs.put(COUNTRY_INDEX, index)
+    fun setCountryName(name: String) = sharedPrefs.put(COUNTRY_NAME, name)
 
-    fun getCountryIndex(): Int = sharedPrefs.get(COUNTRY_INDEX, 0)
+    fun getCountryName(): String = sharedPrefs.get(COUNTRY_NAME, "US")
 }

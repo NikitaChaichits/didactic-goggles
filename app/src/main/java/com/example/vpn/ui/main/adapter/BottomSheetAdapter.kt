@@ -25,7 +25,7 @@ class BottomSheetAdapter(
 
     inner class ItemViewHolder(private val binding: ItemCountryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Country, position: Int) = with(itemView) {
-            binding.tvCountry.text = item.name
+            binding.tvCountry.text = item.fullName
             binding.ivFlag.setImageResource(item.flag)
             if (item.isBestChoice)
                 binding.tvBestChoice.visibility = View.VISIBLE
@@ -42,7 +42,7 @@ class BottomSheetAdapter(
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Country>() {
-        override fun areItemsTheSame(oldItem: Country, newItem: Country): Boolean = oldItem.name == newItem.name
+        override fun areItemsTheSame(oldItem: Country, newItem: Country): Boolean = oldItem.shortName == newItem.shortName
         override fun areContentsTheSame(oldItem: Country, newItem: Country): Boolean = oldItem == newItem
     }
 }

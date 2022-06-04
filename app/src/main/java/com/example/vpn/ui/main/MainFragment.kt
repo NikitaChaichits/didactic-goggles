@@ -16,11 +16,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.vpn.R
 import com.example.vpn.common.base.BaseFragment
-import com.example.vpn.databinding.FragmentMainBinding
 import com.example.vpn.data.vpn.interfaces.ChangeServer
-import com.example.vpn.domain.model.Server
 import com.example.vpn.data.vpn.util.CheckInternetConnection
 import com.example.vpn.data.vpn.util.SharedPreference
+import com.example.vpn.databinding.FragmentMainBinding
+import com.example.vpn.domain.model.Server
 import dagger.hilt.android.AndroidEntryPoint
 import de.blinkt.openvpn.OpenVpnApi
 import de.blinkt.openvpn.core.OpenVPNService
@@ -102,8 +102,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         preference = SharedPreference(requireContext())
         server = preference?.getServer()
 
-        // Update current selected server icon
-//        updateCurrentServerIcon(server?.flagUrl)
         connection = CheckInternetConnection()
     }
 
@@ -314,9 +312,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
      * Change server when user select new server
      * @param server ovpn server details
      */
-    override fun newServer(server: Server?) {
-//        updateCurrentServerIcon(server?.flagUrl)
-
+    override fun newServer() {
         // Stop previous connection
         if (vpnStart) {
             stopVpn()
