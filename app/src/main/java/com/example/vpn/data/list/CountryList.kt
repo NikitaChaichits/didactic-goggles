@@ -1,7 +1,7 @@
 package com.example.vpn.data.list
 
 import com.example.vpn.R
-import com.example.vpn.data.model.Country
+import com.example.vpn.domain.model.Country
 
 object CountryList {
     val list: List<Country> = listOf(

@@ -18,6 +18,8 @@ android {
         targetSdkVersion globalConfig.targetSdkVersion
         versionCode appConfig.versionCode
         versionName appConfig.versionName
+
+        buildConfigField("String", "AUTHORIZATION_KEY", authorization_key)
     }
 
 //    signingConfigs {
@@ -60,6 +62,8 @@ android {
 
 dependencies {
 
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     // Common
     api globalDependencies.coreKtx
     api appDependencies.constraintLayout
@@ -81,6 +85,7 @@ dependencies {
 
     // DI
     api appDependencies.hiltAndroid
+    implementation project(path: ':vpnLib')
     kapt appDependencies.hiltAndroidCompiler
 
     // Gson
