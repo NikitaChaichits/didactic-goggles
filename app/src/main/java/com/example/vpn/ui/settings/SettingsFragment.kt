@@ -23,6 +23,9 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         binding.ivBanner.setOnClickListener {
             navigate(SettingsFragmentDirections.actionSettingsFragmentToSubscriptionFragment(true))
         }
+        binding.btnCheckConnection.setOnClickListener {
+            navigate(R.id.action_settings_fragment_to_speed_test_fragment)
+        }
         binding.btnContactSupport.setOnClickListener {
             navigate(R.id.action_settings_fragment_to_support_fragment)
         }
