@@ -8,7 +8,7 @@ import com.android.billingclient.api.*
 class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
 
     interface OnQueryProductsListener {
-        fun onSuccess(products: List<SkuDetails>)
+        fun onSuccess(products: List<ProductDetails>)
         fun onFailure(error: Error)
     }
 
@@ -33,13 +33,28 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
         .setListener(this)
         .build()
 
-    fun purchase(activity: Activity, product: SkuDetails) {
+    fun purchase(activity: Activity, productDetails: ProductDetails, selectedOfferIndex: Int = 0) {
+
+        val offerToken = productDetails.subscriptionOfferDetails?.get(selectedOfferIndex)?.offerToken
+
+        val productDetailsParamsList =
+            listOf(
+                offerToken?.let {
+                    BillingFlowParams.ProductDetailsParams.newBuilder()
+                        .setProductDetails(productDetails)
+                        .setOfferToken(it)
+                        .build()
+                }
+            )
+
+        val billingFlowParams =
+            BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(productDetailsParamsList)
+                .build()
+
         onConnected {
             activity.runOnUiThread {
-                billingClient.launchBillingFlow(
-                    activity,
-                    BillingFlowParams.newBuilder().setSkuDetails(product).build()
-                )
+                billingClient.launchBillingFlow(activity, billingFlowParams)
             }
         }
     }
@@ -49,10 +64,10 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
 
         queryProductsForType(
             skusList,
-            BillingClient.SkuType.SUBS
-        ) { billingResult, skuDetailsList ->
+            BillingClient.ProductType.SUBS
+        ) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                val products = skuDetailsList ?: mutableListOf()
+                val products = productDetailsList ?: mutableListOf()
                 listener.onSuccess(products)
             } else {
                 listener.onFailure(
@@ -63,13 +78,25 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
     }
 
     private fun queryProductsForType(
-        skusList: List<String>,
-        @BillingClient.SkuType type: String,
-        listener: SkuDetailsResponseListener
+        subsList: List<String>,
+        @BillingClient.ProductType type: String,
+        listener: ProductDetailsResponseListener
     ) {
+        val productList = mutableListOf<QueryProductDetailsParams.Product>()
+
+        for (i in subsList) {
+            productList.add(
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(i)
+                    .setProductType(type)
+                    .build())
+        }
+
+        val params = QueryProductDetailsParams.newBuilder().setProductList(productList)
+
         onConnected {
-            billingClient.querySkuDetailsAsync(
-                SkuDetailsParams.newBuilder().setSkusList(skusList).setType(type).build(),
+            billingClient.queryProductDetailsAsync(
+                params.build(),
                 listener
             )
         }
@@ -153,7 +180,7 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
     fun queryActivePurchases(listener: OnQueryActivePurchasesListener) {
         queryActivePurchasesForType(
             QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.SkuType.SUBS)
+                .setProductType(BillingClient.ProductType.SUBS)
                 .build()
         ) { billingResult, activeSubsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {

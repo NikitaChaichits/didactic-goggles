@@ -3,15 +3,14 @@ package com.cyberself.vpn.ui.subscription
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
 import com.cyberself.vpn.R
 import com.cyberself.vpn.common.base.BaseFragment
 import com.cyberself.vpn.data.source.local.SharedPreferencesDataSource
@@ -26,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
@@ -75,14 +73,14 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
 
     private fun displayProducts() {
         billingClientWrapper.queryProducts(object : BillingClientWrapper.OnQueryProductsListener {
-            override fun onSuccess(products: List<SkuDetails>) {
+            override fun onSuccess(products: List<ProductDetails>) {
                 products.forEach { product ->
-                    purchaseButtonsMap[product.sku]?.apply {
+                    purchaseButtonsMap[product.productId]?.apply {
                         setOnClickListener {
                             billingClientWrapper.purchase(requireActivity(), product)
                             Log.d(
                                 "SubscriptionFragment",
-                                "${product.description} for ${product.price}"
+                                "${product.description} for ${product.oneTimePurchaseOfferDetails?.formattedPrice}"
                             )
                         }
                     }
