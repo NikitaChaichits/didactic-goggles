@@ -13,10 +13,10 @@ import com.example.vpn.util.view.visible
 
 class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription) {
 
-    private val args: SubscriptionFragmentArgs by navArgs()
+    override val viewModel: SubscriptionViewModel by viewModels()
 
     private val binding by viewBinding(FragmentSubscriptionBinding::bind)
-    override val viewModel: SubscriptionViewModel by viewModels()
+    private val args: SubscriptionFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

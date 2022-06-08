@@ -6,6 +6,13 @@ plugins {
     id("androidx.navigation.safeargs")
 }
 
+def localProperties = new Properties()
+try {
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+} catch (Exception e) {
+    logger.warn("No Local Properties File Found!")
+}
+
 android {
 
     flavorDimensions "mode"
@@ -18,6 +25,8 @@ android {
         targetSdkVersion globalConfig.targetSdkVersion
         versionCode appConfig.versionCode
         versionName appConfig.versionName
+
+        buildConfigField("String", "BASE64_ENCODED_PUBLIC_KEY", localProperties['base64EncodedPublicKey'])
     }
 
 //    signingConfigs {
@@ -103,6 +112,9 @@ dependencies {
 
     // View Binding property buster
     implementation appDependencies.viewBindingPropertyDelegate
+
+    //Google Play Billing Library
+    implementation appDependencies.billingVersion
 }
 
 android.applicationVariants.all { variant ->

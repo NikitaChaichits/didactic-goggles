@@ -42,6 +42,10 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
         requireContext().toast(messageStringRes)
     }
 
+    fun toast(message: String) {
+        requireContext().toast(message)
+    }
+
     fun dialog(@StringRes titleStringRes: Int, @StringRes messageStringRes: Int) {
         dialogBuilder(titleStringRes)
             .message(messageStringRes)
