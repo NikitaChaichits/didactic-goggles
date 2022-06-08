@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "vpn"
 include ':app'
 include ':vpnLib'
+include ':speedTestLib'

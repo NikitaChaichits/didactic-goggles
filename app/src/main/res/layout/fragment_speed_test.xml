@@ -19,9 +19,89 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/ivBackgroundOff"
         app:srcCompat="@drawable/ic_result_bg" />
+
+    <TextView
+        android:id="@+id/tvServerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_offset_xl"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivBackgroundResult" />
+
+    <LinearLayout
+        android:id="@+id/llInitial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/pbInitial"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvInitial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/common_offset_m"
+            android:layout_weight="1"
+            android:text="Selecting server"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llSelect"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.8">
+
+        <TextView
+            android:id="@+id/tvSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Select a server"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/spSelectServer"
+            android:layout_marginTop="@dimen/common_offset_m"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <com.natasa.progressviews.CircleProgressBar
+        android:id="@+id/pbCalculating"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:bar_color="#00FFFFFF"
+        app:progress_color="@color/white"
+        app:progress_width="@dimen/common_offset_xxs"
+        app:layout_constraintBottom_toBottomOf="@+id/btnStartStop"
+        app:layout_constraintEnd_toEndOf="@+id/btnStartStop"
+        app:layout_constraintStart_toStartOf="@+id/btnStartStop"
+        app:layout_constraintTop_toTopOf="@+id/btnStartStop" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btnBack"
@@ -136,9 +216,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/common_offset_3xl"
             android:gravity="center"
-            tools:text="12 ms"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            tools:text="12 ms" />
 
         <TextView
             android:id="@+id/tvPing"
@@ -149,6 +229,7 @@
             android:text="@string/fr_speed_test_ping"
             android:textColor="#8E8E93"
             android:textSize="11sp" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
