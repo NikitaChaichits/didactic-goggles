@@ -1,8 +1,6 @@
 package com.example.vpn.ui.main
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.vpn.common.base.BaseViewModel
 import com.example.vpn.domain.model.Country
@@ -11,6 +9,7 @@ import com.example.vpn.domain.result.onSuccess
 import com.example.vpn.domain.usecase.VpnUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,22 +18,22 @@ class MainFragmentViewModel @Inject constructor(
     private val useCase: VpnUseCase
 ) : BaseViewModel() {
 
-    private val _countryList = MutableLiveData<List<Country>>().apply {
-        value = listOf()
-    }
+    private val _countryList = MutableStateFlow<List<Country>>(listOf())
+    val countryList: StateFlow<List<Country>> = _countryList.asStateFlow()
 
-    val countryList: LiveData<List<Country>> = _countryList
+    private val _serverConfig = MutableStateFlow("")
+    val serverConfig: StateFlow<String> = _serverConfig.asStateFlow()
 
-    private val _serverConfig = MutableLiveData<String>().apply {
-        value = ""
-    }
+    private val _country = MutableStateFlow("")
+    val country: StateFlow<String> = _country.asStateFlow()
 
-    val serverConfig: LiveData<String> = _serverConfig
+    private val _vpnStart = MutableStateFlow(false)
+    val vpnStart: StateFlow<Boolean> = _vpnStart.asStateFlow()
 
 
     fun setNewCountryList(selectedItem: Country) {
         val newList = mutableListOf<Country>()
-            _countryList.value?.forEach{
+            _countryList.value.forEach{
                 if (it.shortName == selectedItem.shortName){
                     newList.add(it.copy(isChosen = true))
                     getServerConfig(it.ip)
@@ -44,6 +43,7 @@ class MainFragmentViewModel @Inject constructor(
             }
 
         _countryList.value = newList
+        _country.value = selectedItem.fullName
     }
 
     fun getListFromApi(chosenCountryName: String) {
@@ -58,11 +58,12 @@ class MainFragmentViewModel @Inject constructor(
                                 val chosenCountry = it.mapToCountry().copy(isChosen = true)
                                 countryList.add(chosenCountry)
                                 getServerConfig(it.ip)
+                                _country.value = chosenCountry.fullName
                             }else{
                                 countryList.add(it.mapToCountry())
                             }
                         }
-                        _countryList.postValue(countryList)
+                        _countryList.emit(countryList)
                     }catch (e: Exception){
                         Log.e("MainFragmentViewModel", "exception = $e")
                     }
@@ -70,26 +71,26 @@ class MainFragmentViewModel @Inject constructor(
                 .onError {
                     error.emit(it)
                     Log.e("MainFragmentViewModel", it.toString())
-                    getServerConfig("165.227.117.4")
                 }
         }
     }
 
     private fun getServerConfig(serverIp: String) {
-        viewModelScope.launch(Dispatchers.IO)  {
+         viewModelScope.launch(Dispatchers.IO)  {
             useCase.getServerConfig(serverIp)
-                .onSuccess { serverConfig ->
-                    Log.d("MainFragmentViewModel", "ServerConfig = ${serverConfig.execute().message()}")
-                    try {
-                        _serverConfig.postValue(serverConfig.execute().message())
-                    }catch (e: Exception){
-                        Log.e("MainFragmentViewModel", "exception = $e")
-                    }
+                .onSuccess { configResponse ->
+                    Log.d("MainFragmentViewModel", "ServerConfig = \n${configResponse.body()}")
+                    _serverConfig.value = configResponse.body() ?: ""
+                    Log.e("MainFragmentViewModel", "conf = ${serverConfig.value}")
                 }
                 .onError {
                     error.emit(it)
                     Log.e("MainFragmentViewModel", it.toString())
                 }
         }
+    }
+
+    fun setVpnStart(isStart: Boolean){
+        _vpnStart.value = isStart
     }
 }

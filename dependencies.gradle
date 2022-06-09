@@ -72,6 +72,7 @@ ext {
             gson                       : "com.google.code.gson:gson:${libraryVersions.gsonVersion}",
             retrofit                   : "com.squareup.retrofit2:retrofit:${libraryVersions.retrofitVersion}",
             retrofitConverterGson      : "com.squareup.retrofit2:converter-gson:${libraryVersions.retrofitVersion}",
+            retrofitConverterString    : "com.squareup.retrofit2:converter-scalars:${libraryVersions.retrofitVersion}",
             okHttp                     : "com.squareup.okhttp3:okhttp:${libraryVersions.okHttpVersion}",
             okHttpLoggingInterceptor   : "com.squareup.okhttp3:logging-interceptor:${libraryVersions.okHttpVersion}",
 

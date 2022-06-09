@@ -28,7 +28,7 @@
         android:id="@+id/btnStartStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/ivBackgroundOff"
+        android:layout_marginTop="360dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivBackgroundOff"
@@ -48,83 +48,30 @@
         app:layout_constraintTop_toTopOf="@id/btnStartStop" />
 
     <Button
-        android:id="@+id/vpnBtn"
+        android:id="@+id/btnBottomSheet"
         android:layout_width="150dp"
         android:layout_height="35dp"
-        android:layout_marginTop="16dp"
-        android:tag="1"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="184dp"
         android:background="@drawable/button"
-        android:text="Connect"
+        android:tag="1"
+        android:text="bottomSheet"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStartStop" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
 
-    <TextView
-        android:id="@+id/logTv"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        tools:text="TextView"
-        android:textColor="#ffffff"
+        android:layout_marginTop="12dp"
+        android:textColor="#8E8E93"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vpnBtn" />
-
-    <LinearLayout
-        android:id="@+id/connectionStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/logTv">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Connection Status"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/durationTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Duration: 00:00:00"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/lastPacketReceiveTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Packet Received:"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/byteInTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Bytes In: "
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/byteOutTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Bytes OUT: "
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/btnStartStop"
+        tools:text="TextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

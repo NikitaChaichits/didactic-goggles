@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.FrameLayout
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vpn.R
 import com.example.vpn.data.source.local.SharedPreferencesDataSource
@@ -16,6 +18,7 @@ import com.example.vpn.ui.main.adapter.BottomSheetAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 private const val COLLAPSED_HEIGHT = 112
 
@@ -27,7 +30,7 @@ class BottomFragment : BottomSheetDialogFragment() {
     private lateinit var binding: BottomSheetLayoutBinding
     private lateinit var behavior: BottomSheetBehavior<FrameLayout>
 
-    private val viewModel by viewModels<MainFragmentViewModel>()
+    private val viewModel by activityViewModels<MainFragmentViewModel>()
     private val adapter by lazy { BottomSheetAdapter(::chooseCountry) }
 
     private val countryList: MutableList<Country> = mutableListOf()
@@ -52,7 +55,13 @@ class BottomFragment : BottomSheetDialogFragment() {
     private fun setupBottomBehavior() {
         val density = requireContext().resources.displayMetrics.density
 
+        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+
+        dialog?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
+
         dialog?.let {
+//            it.setCancelable(false)
             val bottomSheet = it.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
             behavior = BottomSheetBehavior.from(bottomSheet)
 
@@ -99,13 +108,15 @@ class BottomFragment : BottomSheetDialogFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
-        viewModel.countryList.observe(viewLifecycleOwner) { list ->
-            countryList.clear()
-            countryList.addAll(list)
-            adapter.notifyDataSetChanged()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.countryList.collect { list ->
+                countryList.clear()
+                countryList.addAll(list)
+                adapter.notifyDataSetChanged()
 
-            if (!list.isNullOrEmpty())
-                setCountry(list, prefs.getCountryName())
+                if (!list.isNullOrEmpty())
+                    setCountry(list, prefs.getCountryName())
+            }
         }
     }
 

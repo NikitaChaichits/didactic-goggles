@@ -11,39 +11,40 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.vpn.R
 import com.example.vpn.common.base.BaseFragment
 import com.example.vpn.data.vpn.interfaces.ChangeServer
 import com.example.vpn.data.vpn.util.CheckInternetConnection
-import com.example.vpn.data.vpn.util.SharedPreference
 import com.example.vpn.databinding.FragmentMainBinding
-import com.example.vpn.domain.model.Server
 import dagger.hilt.android.AndroidEntryPoint
 import de.blinkt.openvpn.OpenVpnApi
 import de.blinkt.openvpn.core.OpenVPNService
 import de.blinkt.openvpn.core.OpenVPNThread
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
+import kotlinx.coroutines.launch
+import com.example.vpn.ui.main.Status.*
+import java.io.*
 
 @AndroidEntryPoint
 class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
     private val binding by viewBinding(FragmentMainBinding::bind)
-    override val viewModel: MainFragmentViewModel by viewModels()
+    override val viewModel by activityViewModels<MainFragmentViewModel>()
 
-    private var server: Server? = null
     private var connection: CheckInternetConnection? = null
-    private var preference: SharedPreference? = null
     private var vpnStart = false
+    private var country: String = ""
+    private var config: String = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        connection = CheckInternetConnection()
         initListeners()
-        initializeAll()
+        observeViewModels()
+        binding.btnBottomSheet.callOnClick()
     }
 
     private fun initListeners() {
@@ -51,15 +52,32 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             navigate(R.id.action_main_fragment_to_settings_fragment)
         }
         binding.btnStartStop.setOnClickListener {
-            BottomFragment().show(requireActivity().supportFragmentManager, "Bottom Sheet")
-        }
-
-        binding.vpnBtn.setOnClickListener {
-            // Vpn is running, user would like to disconnect current connection.
             if (vpnStart) {
                 confirmDisconnect()
             } else {
                 prepareVpn()
+            }
+        }
+        binding.btnBottomSheet.setOnClickListener {
+            BottomFragment().show(requireActivity().supportFragmentManager, "Bottom Sheet")
+        }
+    }
+
+    private fun observeViewModels() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.serverConfig.collect {
+                config = it
+                binding.btnStartStop.isClickable = it != ""
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.country.collect {
+                country = it
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.vpnStart.collect {
+                vpnStart = it
             }
         }
     }
@@ -70,48 +88,28 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     private fun prepareVpn() {
         if (!vpnStart) {
             if (getInternetStatus()) {
-
                 // Checking permission for network monitor
                 val intent = VpnService.prepare(context)
                 if (intent != null) {
                     startActivityForResult(intent, 1)
                 } else {
                     //have already permission
-
                     // Update confection status
-                    status("connecting")
+                    status(CONNECTING.value)
                     startVpn()
                 }
-
             } else {
-
-                // No internet connection available
                 showToast("you have no internet connection !!")
             }
         } else if (stopVpn()) {
-
-            // VPN is stopped, show a Toast message.
             showToast("Disconnect Successfully")
         }
     }
 
-    /**
-     * Initialize all variable and object
-     */
-    private fun initializeAll() {
-        preference = SharedPreference(requireContext())
-        server = preference?.getServer()
-
-        connection = CheckInternetConnection()
-    }
-
-    /**
-     * Start the VPN
-     */
     private fun startVpn() {
         try {
             // .ovpn file
-            val conf = requireActivity().assets.open(server?.ovpn!!)
+            val conf: InputStream = StringBufferInputStream(config)
             val isr = InputStreamReader(conf)
             val br = BufferedReader(isr)
             var config = ""
@@ -121,56 +119,36 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 if (line == null) break
                 config += """
                 $line
-                
+
                 """.trimIndent()
             }
-            Log.d("MainFragment", "config = $config")
             br.readLine()
+
             OpenVpnApi.startVpn(
                 context,
                 config,
-                server?.country,
-                server?.ovpnUserName,
-                server?.ovpnUserPassword
+                country,
+                "vpn",
+                "vpn"
             )
 
-            // Update log
-            binding.logTv.text = "Connecting..."
-            vpnStart = true
+            binding.tvStatus.text = "Connecting..."
+            viewModel.setVpnStart(true)
         } catch (e: IOException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
-            status("connect")
+            status(CONNECT.value)
         } catch (e: RemoteException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
-            status("connect")
+            status(CONNECT.value)
         }
-    }
-
-    /**
-     * Update status UI
-     * @param duration: running time
-     * @param lastPacketReceive: last packet receive time
-     * @param byteIn: incoming data
-     * @param byteOut: outgoing data
-     */
-    fun updateConnectionStatus(
-        duration: String,
-        lastPacketReceive: String,
-        byteIn: String,
-        byteOut: String
-    ) {
-        binding.durationTv.text = "Duration: $duration"
-        binding.lastPacketReceiveTv.text = "Packet Received: $lastPacketReceive second ago"
-        binding.byteInTv.text = "Bytes In: $byteIn"
-        binding.byteOutTv.text = "Bytes Out: $byteOut"
     }
 
     /**
      * Receive broadcast message
      */
-    var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 setStatus(intent.getStringExtra("state"))
@@ -186,7 +164,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 if (lastPacketReceive == null) lastPacketReceive = "0"
                 if (byteIn == null) byteIn = " "
                 if (byteOut == null) byteOut = " "
-                updateConnectionStatus(duration, lastPacketReceive, byteIn, byteOut)
+                Log.d("Main Fragment",
+                    "duration = $duration, lastPacketReceive = $lastPacketReceive, " +
+                            "byteIn = $byteIn, byteOut = $byteOut")
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
@@ -200,23 +180,48 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     fun setStatus(connectionState: String?) {
         if (connectionState != null) when (connectionState) {
             "DISCONNECTED" -> {
-                status("connect")
-                vpnStart = false
+                status(CONNECT.value)
+                viewModel.setVpnStart(false)
                 OpenVPNService.setDefaultStatus()
-                binding.logTv.text = ""
+                binding.tvStatus.text = ""
             }
             "CONNECTED" -> {
-                vpnStart = true // it will use after restart this activity
-                status("connected")
-                binding.logTv.text = ""
+                viewModel.setVpnStart(true) // it will use after restart this activity
+                status(CONNECTED.value)
+                binding.tvStatus.text = ""
             }
-            "WAIT" -> binding.logTv.text = "waiting for server connection!!"
-            "AUTH" -> binding.logTv.text = "server authenticating!!"
+            "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
+            "AUTH" -> binding.tvStatus.text = "server authenticating!!"
             "RECONNECTING" -> {
-                status("connecting")
-                binding.logTv.text = "Reconnecting..."
+                status(CONNECTING.value)
+                binding.tvStatus.text = "Reconnecting..."
             }
-            "NONETWORK" -> binding.logTv.text = "No network connection"
+            "NONETWORK" -> binding.tvStatus.text = "No network connection"
+        }
+    }
+
+
+    private fun status(status: String) {
+        when (status) {
+            CONNECT.value -> {
+                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
+                binding.btnStartStop.setColorFilter(
+                    resources.getColor(R.color.appBackground))
+            }
+            CONNECTING.value -> {
+                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
+                binding.btnStartStop.setColorFilter(
+                    resources.getColor(R.color.appBackground))
+            }
+            CONNECTED.value -> {
+                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
+                binding.btnStartStop.setColorFilter(
+                        resources.getColor(R.color.shareButton_background))
+            }
+            TRY_DIFFERENT_SERVER.value -> {}
+            LOADING.value -> {}
+            INVALID_DEVICE.value -> {}
+            AUTHENTICATION_CHECK.value -> {}
         }
     }
 
@@ -237,11 +242,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             // User cancelled the dialog
         }
 
-        // Create the AlertDialog
         val dialog = builder.create()
         dialog.show()
     }
-
 
     /**
      * Stop vpn
@@ -250,8 +253,8 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     private fun stopVpn(): Boolean {
         try {
             OpenVPNThread.stop()
-            status("connect")
-            vpnStart = false
+            status(CONNECT.value)
+            viewModel.setVpnStart(false)
             return true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -267,40 +270,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     }
 
     /**
-     * Change button background color and text
-     * @param status: VPN current status
-     */
-    private fun status(status: String) {
-        when (status) {
-            "connect" -> {
-                binding.vpnBtn.text = requireContext().getString(R.string.connect)
-            }
-            "connecting" -> {
-                binding.vpnBtn.text = requireContext().getString(R.string.connecting)
-            }
-            "connected" -> {
-                binding.vpnBtn.text = requireContext().getString(R.string.disconnect)
-            }
-            "tryDifferentServer" -> {
-                binding.vpnBtn.setBackgroundResource(R.drawable.button_connected)
-                binding.vpnBtn.text = "Try Different\nServer"
-            }
-            "loading" -> {
-                binding.vpnBtn.setBackgroundResource(R.drawable.button)
-                binding.vpnBtn.text = "Loading Server.."
-            }
-            "invalidDevice" -> {
-                binding.vpnBtn.setBackgroundResource(R.drawable.button_connected)
-                binding.vpnBtn.text = "Invalid Device"
-            }
-            "authenticationCheck" -> {
-                binding.vpnBtn.setBackgroundResource(R.drawable.button_connecting)
-                binding.vpnBtn.text = "Authentication \n Checking..."
-            }
-        }
-    }
-
-    /**
      * Show toast message
      * @param message: toast message
      */
@@ -313,20 +282,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
      * @param server ovpn server details
      */
     override fun newServer() {
-        // Stop previous connection
-        if (vpnStart) {
-            stopVpn()
-        }
+        if (vpnStart) { stopVpn() }
         prepareVpn()
     }
-
 
     override fun onResume() {
         LocalBroadcastManager.getInstance(requireActivity())
             .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))
-        if (server == null) {
-            server = preference?.getServer()
-        }
         super.onResume()
     }
 
@@ -335,13 +297,4 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         super.onPause()
     }
 
-    /**
-     * Save current selected server on local shared preference
-     */
-    override fun onStop() {
-        if (server != null) {
-            preference?.saveServer(server!!)
-        }
-        super.onStop()
-    }
 }

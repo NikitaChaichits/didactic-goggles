@@ -95,6 +95,7 @@ dependencies {
     // Retrofit2
     api appDependencies.retrofit
     api appDependencies.retrofitConverterGson
+    api appDependencies.retrofitConverterString
 
     // OkHttp3
     api appDependencies.okHttp

@@ -5,8 +5,7 @@ import com.example.vpn.data.constants.RemoteConstants.GET_CONFIG
 import com.example.vpn.data.constants.RemoteConstants.GET_LIST
 import com.example.vpn.data.constants.RemoteConstants.KEY
 import com.example.vpn.domain.model.ApiServer
-import com.example.vpn.domain.model.ConfigResponse
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
@@ -18,5 +17,5 @@ interface VpnServerApi {
 
     @Headers("$AUTHORIZATION: $KEY")
     @GET(GET_CONFIG)
-    suspend fun getConfig(@Path("ip") serverIp: String): Call<ConfigResponse>
+    suspend fun getConfig(@Path("ip") serverIp: String): Response<String>
 }
