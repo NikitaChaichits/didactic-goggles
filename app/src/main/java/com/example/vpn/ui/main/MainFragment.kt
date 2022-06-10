@@ -75,6 +75,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             if (vpnStart) {
                 confirmDisconnect()
             } else {
+                viewModel.setStatus(CONNECTING.value)
                 prepareVpn()
             }
         }
@@ -102,19 +103,32 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             viewModel.status.collect { status ->
                 when (status) {
                     CONNECT.value -> {
+                        binding.btnStartStop.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground))
+                        binding.tvStatus.text = resources.getString(R.string.fr_main_press_to_connect)
                     }
                     CONNECTING.value -> {
+                        binding.btnStartStop.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground))
+                        binding.tvStatus.text  = resources.getString(R.string.fr_main_connecting)
                     }
                     CONNECTED.value -> {
+                        binding.btnStartStop.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.shareButton_background))
+                        binding.tvStatus.text = resources.getString(R.string.fr_main_press_to_disconnect)
+                    }
+                    RECONNECTING.value -> {
+                        binding.btnStartStop.isEnabled = false
+                        binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
+                        binding.btnStartStop.setColorFilter(
+                            resources.getColor(R.color.appBackground))
+                        binding.tvStatus.text  = resources.getString(R.string.fr_main_reconnecting)
                     }
                     TRY_DIFFERENT_SERVER.value -> {}
                     LOADING.value -> {}
@@ -199,6 +213,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         setSingleItem(country)
         if (this::behavior.isInitialized)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // reconnect
+        if (vpnStart){
+            stopVpn()
+            viewModel.setStatus(RECONNECTING.value)
+            startVpn()
+        }
     }
 
     private fun setSingleItem(country: Country?) {
@@ -235,7 +256,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 } else {
                     //have already permission
                     // Update confection status
-                    viewModel.setStatus(CONNECTING.value)
                     startVpn()
                 }
             } else {
@@ -272,7 +292,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 "vpn"
             )
 
-            binding.tvStatus.text = "Connecting..."
             viewModel.setVpnStart(true)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -320,50 +339,19 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     fun setStatus(connectionState: String?) {
         if (connectionState != null) when (connectionState) {
             "DISCONNECTED" -> {
-                viewModel.setStatus(CONNECT.value)
                 viewModel.setVpnStart(false)
                 OpenVPNService.setDefaultStatus()
-                binding.tvStatus.text = ""
             }
             "CONNECTED" -> {
                 viewModel.setVpnStart(true) // it will use after restart this activity
                 viewModel.setStatus(CONNECTED.value)
-                binding.tvStatus.text = ""
             }
-            "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
-            "AUTH" -> binding.tvStatus.text = "server authenticating!!"
-            "RECONNECTING" -> {
-                viewModel.setStatus(CONNECTING.value)
-                binding.tvStatus.text = "Reconnecting..."
-            }
-            "NONETWORK" -> binding.tvStatus.text = "No network connection"
+//            "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
+//            "AUTH" -> binding.tvStatus.text = "server authenticating!!"
+//            "RECONNECTING" -> binding.tvStatus.text = "Reconnecting..."
+//            "NONETWORK" -> binding.tvStatus.text = "No network connection"
         }
     }
-
-
-//    private fun status(status: String) {
-//        when (status) {
-//            CONNECT.value -> {
-//                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
-//                binding.btnStartStop.setColorFilter(
-//                    resources.getColor(R.color.appBackground))
-//            }
-//            CONNECTING.value -> {
-//                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
-//                binding.btnStartStop.setColorFilter(
-//                    resources.getColor(R.color.appBackground))
-//            }
-//            CONNECTED.value -> {
-//                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
-//                binding.btnStartStop.setColorFilter(
-//                        resources.getColor(R.color.shareButton_background))
-//            }
-//            TRY_DIFFERENT_SERVER.value -> {}
-//            LOADING.value -> {}
-//            INVALID_DEVICE.value -> {}
-//            AUTHENTICATION_CHECK.value -> {}
-//        }
-//    }
 
     /**
      * Show show disconnect confirm dialog

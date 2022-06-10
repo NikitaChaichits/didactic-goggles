@@ -58,6 +58,7 @@
             android:layout_marginTop="12dp"
             android:textColor="#8E8E93"
             android:textSize="15sp"
+            android:text="@string/fr_main_press_to_connect"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnStartStop"
