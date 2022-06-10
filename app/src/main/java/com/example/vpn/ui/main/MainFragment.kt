@@ -21,6 +21,8 @@ import com.example.vpn.data.vpn.util.CheckInternetConnection
 import com.example.vpn.data.vpn.util.SharedPreference
 import com.example.vpn.databinding.FragmentMainBinding
 import com.example.vpn.domain.model.Server
+import com.example.vpn.util.view.invisible
+import com.example.vpn.util.view.visible
 import dagger.hilt.android.AndroidEntryPoint
 import de.blinkt.openvpn.OpenVpnApi
 import de.blinkt.openvpn.core.OpenVPNService
@@ -38,7 +40,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     private var server: Server? = null
     private var connection: CheckInternetConnection? = null
     private var preference: SharedPreference? = null
-    private var vpnStart = false
+    private var isVpnStarted = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,12 +53,22 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             navigate(R.id.action_main_fragment_to_settings_fragment)
         }
         binding.btnStartStop.setOnClickListener {
-            BottomFragment().show(requireActivity().supportFragmentManager, "Bottom Sheet")
+            if (isVpnStarted) {
+                isVpnStarted = false
+                binding.avConnectionOn.invisible()
+                binding.avNoConnection.visible()
+                binding.tvBtnName.text = "Start"
+            } else {
+                isVpnStarted = true
+                binding.avConnectionOn.visible()
+                binding.avNoConnection.invisible()
+                binding.tvBtnName.text = "Stop"
+            }
+//            BottomFragment().show(requireActivity().supportFragmentManager, "Bottom Sheet")
         }
 
-        binding.vpnBtn.setOnClickListener {
-            // Vpn is running, user would like to disconnect current connection.
-            if (vpnStart) {
+        binding.btnConnect.setOnClickListener {
+            if (isVpnStarted) {
                 confirmDisconnect()
             } else {
                 prepareVpn()
@@ -68,7 +80,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
      * Prepare for vpn connect with required permission
      */
     private fun prepareVpn() {
-        if (!vpnStart) {
+        if (!isVpnStarted) {
             if (getInternetStatus()) {
 
                 // Checking permission for network monitor
@@ -136,7 +148,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
             // Update log
             binding.logTv.text = "Connecting..."
-            vpnStart = true
+            isVpnStarted = true
         } catch (e: IOException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
@@ -201,12 +213,12 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         if (connectionState != null) when (connectionState) {
             "DISCONNECTED" -> {
                 status("connect")
-                vpnStart = false
+                isVpnStarted = false
                 OpenVPNService.setDefaultStatus()
                 binding.logTv.text = ""
             }
             "CONNECTED" -> {
-                vpnStart = true // it will use after restart this activity
+                isVpnStarted = true // it will use after restart this activity
                 status("connected")
                 binding.logTv.text = ""
             }
@@ -251,7 +263,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         try {
             OpenVPNThread.stop()
             status("connect")
-            vpnStart = false
+            isVpnStarted = false
             return true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -273,29 +285,29 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     private fun status(status: String) {
         when (status) {
             "connect" -> {
-                binding.vpnBtn.text = requireContext().getString(R.string.connect)
+                binding.btnConnect.text = requireContext().getString(R.string.connect)
             }
             "connecting" -> {
-                binding.vpnBtn.text = requireContext().getString(R.string.connecting)
+                binding.btnConnect.text = requireContext().getString(R.string.connecting)
             }
             "connected" -> {
-                binding.vpnBtn.text = requireContext().getString(R.string.disconnect)
+                binding.btnConnect.text = requireContext().getString(R.string.disconnect)
             }
             "tryDifferentServer" -> {
-                binding.vpnBtn.setBackgroundResource(R.drawable.button_connected)
-                binding.vpnBtn.text = "Try Different\nServer"
+                binding.btnConnect.setBackgroundResource(R.drawable.button_connected)
+                binding.btnConnect.text = "Try Different\nServer"
             }
             "loading" -> {
-                binding.vpnBtn.setBackgroundResource(R.drawable.button)
-                binding.vpnBtn.text = "Loading Server.."
+                binding.btnConnect.setBackgroundResource(R.drawable.button)
+                binding.btnConnect.text = "Loading Server.."
             }
             "invalidDevice" -> {
-                binding.vpnBtn.setBackgroundResource(R.drawable.button_connected)
-                binding.vpnBtn.text = "Invalid Device"
+                binding.btnConnect.setBackgroundResource(R.drawable.button_connected)
+                binding.btnConnect.text = "Invalid Device"
             }
             "authenticationCheck" -> {
-                binding.vpnBtn.setBackgroundResource(R.drawable.button_connecting)
-                binding.vpnBtn.text = "Authentication \n Checking..."
+                binding.btnConnect.setBackgroundResource(R.drawable.button_connecting)
+                binding.btnConnect.text = "Authentication \n Checking..."
             }
         }
     }
@@ -314,7 +326,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
      */
     override fun newServer() {
         // Stop previous connection
-        if (vpnStart) {
+        if (isVpnStarted) {
             stopVpn()
         }
         prepareVpn()

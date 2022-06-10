@@ -28,6 +28,8 @@ def libraryVersions = [
 
         coroutineVersion           : '1.6.1-native-mt',
         viewBindingPropertyDelegate: '1.5.6',
+
+        lottieVersion              : '3.4.0',
 ]
 
 ext {
@@ -80,5 +82,7 @@ ext {
             hiltAndroidCompiler        : "com.google.dagger:hilt-android-compiler:${libraryVersions.hilt}",
 
             viewBindingPropertyDelegate: "com.github.kirich1409:viewbindingpropertydelegate-noreflection:${libraryVersions.viewBindingPropertyDelegate}",
+
+            lottie                     : "com.airbnb.android:lottie:${libraryVersions.lottieVersion}"
     ]
 }

@@ -108,6 +108,9 @@ dependencies {
 
     // View Binding property buster
     implementation appDependencies.viewBindingPropertyDelegate
+
+    // Animation
+    implementation appDependencies.lottie
 }
 
 android.applicationVariants.all { variant ->
