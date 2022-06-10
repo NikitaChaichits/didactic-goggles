@@ -28,6 +28,8 @@ def libraryVersions = [
 
         coroutineVersion           : '1.6.1-native-mt',
         viewBindingPropertyDelegate: '1.5.6',
+
+        progressViewVersion        : '5843c69b44',
 ]
 
 ext {
@@ -70,6 +72,7 @@ ext {
             gson                       : "com.google.code.gson:gson:${libraryVersions.gsonVersion}",
             retrofit                   : "com.squareup.retrofit2:retrofit:${libraryVersions.retrofitVersion}",
             retrofitConverterGson      : "com.squareup.retrofit2:converter-gson:${libraryVersions.retrofitVersion}",
+            retrofitConverterString    : "com.squareup.retrofit2:converter-scalars:${libraryVersions.retrofitVersion}",
             okHttp                     : "com.squareup.okhttp3:okhttp:${libraryVersions.okHttpVersion}",
             okHttpLoggingInterceptor   : "com.squareup.okhttp3:logging-interceptor:${libraryVersions.okHttpVersion}",
 
@@ -80,5 +83,7 @@ ext {
             hiltAndroidCompiler        : "com.google.dagger:hilt-android-compiler:${libraryVersions.hilt}",
 
             viewBindingPropertyDelegate: "com.github.kirich1409:viewbindingpropertydelegate-noreflection:${libraryVersions.viewBindingPropertyDelegate}",
+
+            progressViewLib            : "com.github.natasam:DemoProgressViewsLibApp:${libraryVersions.progressViewVersion}",
     ]
 }

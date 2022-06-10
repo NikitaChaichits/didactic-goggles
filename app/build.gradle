@@ -63,6 +63,8 @@ android {
 dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':vpnLib')
+    implementation project(path: ':speedTestLib')
 
     // Common
     api globalDependencies.coreKtx
@@ -85,7 +87,6 @@ dependencies {
 
     // DI
     api appDependencies.hiltAndroid
-    implementation project(path: ':vpnLib')
     kapt appDependencies.hiltAndroidCompiler
 
     // Gson
@@ -94,6 +95,7 @@ dependencies {
     // Retrofit2
     api appDependencies.retrofit
     api appDependencies.retrofitConverterGson
+    api appDependencies.retrofitConverterString
 
     // OkHttp3
     api appDependencies.okHttp
@@ -108,6 +110,9 @@ dependencies {
 
     // View Binding property buster
     implementation appDependencies.viewBindingPropertyDelegate
+
+    // Progress Views Lib
+    implementation appDependencies.progressViewLib
 }
 
 android.applicationVariants.all { variant ->

@@ -101,4 +101,16 @@
     <string name="fr_support_browsing">Slow browsing</string>
     <string name="fr_support_else">Something else</string>
 
+    <!-- Fragment Speed Test -->
+    <string name="fr_speed_test_press_to_check">Press to check</string>
+    <string name="fr_speed_test_calculation">Calculation…</string>
+    <string name="fr_speed_test_error">Error</string>
+    <string name="fr_speed_test_start">Start</string>
+    <string name="fr_speed_test_restart">Restart</string>
+    <string name="fr_speed_test_download">Download</string>
+    <string name="fr_speed_test_upload">Upload</string>
+    <string name="fr_speed_test_ping">Ping</string>
+    <string name="fr_speed_test_mbps">mbps</string>
+    <string name="fr_speed_test_ms">ms</string>
+
 </resources>

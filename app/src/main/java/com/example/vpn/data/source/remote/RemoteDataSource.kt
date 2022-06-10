@@ -3,9 +3,8 @@ package com.example.vpn.data.source.remote
 import com.example.vpn.data.source.remote.api.VpnServerApi
 import com.example.vpn.data.util.safeApiCall
 import com.example.vpn.domain.model.ApiServer
-import com.example.vpn.domain.model.ConfigResponse
 import com.example.vpn.domain.result.Result
-import retrofit2.Call
+import retrofit2.Response
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(
@@ -16,7 +15,7 @@ class RemoteDataSource @Inject constructor(
         return safeApiCall { api.getServersList() }
     }
 
-    suspend fun getServerConfig(serverIp: String): Result<Call<ConfigResponse>> {
+    suspend fun getServerConfig(serverIp: String): Result<Response<String>> {
         return safeApiCall { api.getConfig(serverIp) }
     }
 }
