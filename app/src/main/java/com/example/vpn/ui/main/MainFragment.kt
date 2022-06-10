@@ -1,5 +1,6 @@
 package com.example.vpn.ui.main
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,21 +12,27 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.vpn.R
 import com.example.vpn.common.base.BaseFragment
+import com.example.vpn.data.source.local.SharedPreferencesDataSource
 import com.example.vpn.data.vpn.interfaces.ChangeServer
 import com.example.vpn.data.vpn.util.CheckInternetConnection
 import com.example.vpn.databinding.FragmentMainBinding
+import com.example.vpn.domain.model.Country
+import com.example.vpn.ui.main.Status.*
+import com.example.vpn.ui.main.adapter.BottomSheetAdapter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import de.blinkt.openvpn.OpenVpnApi
 import de.blinkt.openvpn.core.OpenVPNService
 import de.blinkt.openvpn.core.OpenVPNThread
 import kotlinx.coroutines.launch
-import com.example.vpn.ui.main.Status.*
 import java.io.*
 
 @AndroidEntryPoint
@@ -33,6 +40,11 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
     private val binding by viewBinding(FragmentMainBinding::bind)
     override val viewModel by activityViewModels<MainFragmentViewModel>()
+    private val adapter by lazy { BottomSheetAdapter(::chooseCountry) }
+
+    private lateinit var prefs : SharedPreferencesDataSource
+    private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
+    private val countryList: MutableList<Country> = mutableListOf()
 
     private var connection: CheckInternetConnection? = null
     private var vpnStart = false
@@ -41,10 +53,15 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        connection = CheckInternetConnection()
+        initAll()
         initListeners()
         observeViewModels()
-        binding.btnBottomSheet.callOnClick()
+    }
+
+    private fun initAll() {
+        prefs = SharedPreferencesDataSource(requireContext())
+        viewModel.getListFromApi(prefs.getCountryName())
+        connection = CheckInternetConnection()
     }
 
     private fun initListeners() {
@@ -52,17 +69,18 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             navigate(R.id.action_main_fragment_to_settings_fragment)
         }
         binding.btnStartStop.setOnClickListener {
+            if (behavior.state == BottomSheetBehavior.STATE_EXPANDED)
+                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
             if (vpnStart) {
                 confirmDisconnect()
             } else {
                 prepareVpn()
             }
         }
-        binding.btnBottomSheet.setOnClickListener {
-            BottomFragment().show(requireActivity().supportFragmentManager, "Bottom Sheet")
-        }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModels() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.serverConfig.collect {
@@ -80,7 +98,129 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 vpnStart = it
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.status.collect { status ->
+                when (status) {
+                    CONNECT.value -> {
+                        binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
+                        binding.btnStartStop.setColorFilter(
+                            resources.getColor(R.color.appBackground))
+                    }
+                    CONNECTING.value -> {
+                        binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
+                        binding.btnStartStop.setColorFilter(
+                            resources.getColor(R.color.appBackground))
+                    }
+                    CONNECTED.value -> {
+                        binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
+                        binding.btnStartStop.setColorFilter(
+                            resources.getColor(R.color.shareButton_background))
+                    }
+                    TRY_DIFFERENT_SERVER.value -> {}
+                    LOADING.value -> {}
+                    INVALID_DEVICE.value -> {}
+                    AUTHENTICATION_CHECK.value -> {}
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.countryList.collect { list ->
+                countryList.clear()
+                countryList.addAll(list)
+                adapter.notifyDataSetChanged()
+
+                if (!list.isNullOrEmpty())
+                    setCountry(list, prefs.getCountryName())
+            }
+        }
     }
+
+    // Bottom Sheet
+
+    override fun onStart() {
+        super.onStart()
+        setupBottomBehavior()
+        setupRecyclerView()
+    }
+
+    private fun setupBottomBehavior() {
+        behavior = BottomSheetBehavior.from(binding.bottomSheet)
+
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        behavior.isHideable = false
+
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                with(binding) {
+                    if (slideOffset > 0) {
+                        layoutCollapsed.alpha = 1 - 2 * slideOffset
+                        layoutExpanded.alpha = slideOffset * slideOffset
+
+                        if (slideOffset > 0.5) {
+                            layoutCollapsed.visibility = View.GONE
+                            layoutExpanded.visibility = View.VISIBLE
+                        }
+
+                        if (slideOffset < 0.5 && binding.layoutExpanded.visibility == View.VISIBLE) {
+                            layoutCollapsed.visibility = View.VISIBLE
+                            layoutExpanded.visibility = View.INVISIBLE
+                        }
+                    }
+                }
+            }
+        })
+
+        binding.imgClose.setOnClickListener {
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvCountries.adapter = adapter
+        binding.rvCountries.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter.submitList(countryList)
+    }
+
+
+    private fun setCountry(countryList: List<Country>, countryName: String) {
+        val country = countryList.find { it.shortName == countryName }
+
+        setSingleItem(country)
+    }
+
+    private fun chooseCountry(itemPosition: Int) {
+        val country = adapter.currentList[itemPosition]
+        prefs.setCountryName(country.shortName)
+        viewModel.setNewCountryList(country)
+        setSingleItem(country)
+        if (this::behavior.isInitialized)
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    private fun setSingleItem(country: Country?) {
+        binding.singleItem.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.INVISIBLE
+
+        if (country != null){
+            binding.include.ivFlag.setImageResource(country.flag)
+            binding.include.tvCountry.text = country.fullName
+
+            if (country.shortName == "US")
+                binding.include.tvBestChoice.visibility = View.VISIBLE
+            else
+                binding.include.tvBestChoice.visibility = View.GONE
+        } else{
+            binding.include.ivFlag.setImageResource(R.drawable.ic_placeholder)
+            binding.include.tvCountry.text ="Unknown country"
+        }
+    }
+
+
+    // Work with VPN
 
     /**
      * Prepare for vpn connect with required permission
@@ -95,7 +235,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 } else {
                     //have already permission
                     // Update confection status
-                    status(CONNECTING.value)
+                    viewModel.setStatus(CONNECTING.value)
                     startVpn()
                 }
             } else {
@@ -137,11 +277,11 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         } catch (e: IOException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
-            status(CONNECT.value)
+            viewModel.setStatus(CONNECT.value)
         } catch (e: RemoteException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
-            status(CONNECT.value)
+            viewModel.setStatus(CONNECT.value)
         }
     }
 
@@ -180,20 +320,20 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     fun setStatus(connectionState: String?) {
         if (connectionState != null) when (connectionState) {
             "DISCONNECTED" -> {
-                status(CONNECT.value)
+                viewModel.setStatus(CONNECT.value)
                 viewModel.setVpnStart(false)
                 OpenVPNService.setDefaultStatus()
                 binding.tvStatus.text = ""
             }
             "CONNECTED" -> {
                 viewModel.setVpnStart(true) // it will use after restart this activity
-                status(CONNECTED.value)
+                viewModel.setStatus(CONNECTED.value)
                 binding.tvStatus.text = ""
             }
             "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
             "AUTH" -> binding.tvStatus.text = "server authenticating!!"
             "RECONNECTING" -> {
-                status(CONNECTING.value)
+                viewModel.setStatus(CONNECTING.value)
                 binding.tvStatus.text = "Reconnecting..."
             }
             "NONETWORK" -> binding.tvStatus.text = "No network connection"
@@ -201,29 +341,29 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     }
 
 
-    private fun status(status: String) {
-        when (status) {
-            CONNECT.value -> {
-                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
-                binding.btnStartStop.setColorFilter(
-                    resources.getColor(R.color.appBackground))
-            }
-            CONNECTING.value -> {
-                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
-                binding.btnStartStop.setColorFilter(
-                    resources.getColor(R.color.appBackground))
-            }
-            CONNECTED.value -> {
-                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
-                binding.btnStartStop.setColorFilter(
-                        resources.getColor(R.color.shareButton_background))
-            }
-            TRY_DIFFERENT_SERVER.value -> {}
-            LOADING.value -> {}
-            INVALID_DEVICE.value -> {}
-            AUTHENTICATION_CHECK.value -> {}
-        }
-    }
+//    private fun status(status: String) {
+//        when (status) {
+//            CONNECT.value -> {
+//                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
+//                binding.btnStartStop.setColorFilter(
+//                    resources.getColor(R.color.appBackground))
+//            }
+//            CONNECTING.value -> {
+//                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
+//                binding.btnStartStop.setColorFilter(
+//                    resources.getColor(R.color.appBackground))
+//            }
+//            CONNECTED.value -> {
+//                binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
+//                binding.btnStartStop.setColorFilter(
+//                        resources.getColor(R.color.shareButton_background))
+//            }
+//            TRY_DIFFERENT_SERVER.value -> {}
+//            LOADING.value -> {}
+//            INVALID_DEVICE.value -> {}
+//            AUTHENTICATION_CHECK.value -> {}
+//        }
+//    }
 
     /**
      * Show show disconnect confirm dialog
@@ -253,7 +393,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     private fun stopVpn(): Boolean {
         try {
             OpenVPNThread.stop()
-            status(CONNECT.value)
+            viewModel.setStatus(CONNECT.value)
             viewModel.setVpnStart(false)
             return true
         } catch (e: Exception) {

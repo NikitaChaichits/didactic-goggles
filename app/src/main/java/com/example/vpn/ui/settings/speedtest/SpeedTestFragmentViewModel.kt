@@ -1,20 +1,17 @@
 package com.example.vpn.ui.settings.speedtest
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.vpn.common.base.BaseViewModel
+import com.example.vpn.ui.settings.speedtest.State.INITIAL
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
-import com.example.vpn.ui.settings.speedtest.State.*
 
 @HiltViewModel
 class SpeedTestFragmentViewModel @Inject constructor() : BaseViewModel() {
 
-    private val _state = MutableLiveData<String>().apply{
-        value = INITIAL.value
-    }
-
-    val state : LiveData<String> = _state
+    private val _state = MutableStateFlow(INITIAL.value)
+    val state : StateFlow<String> = _state
 
 
     fun setState(state: String) {

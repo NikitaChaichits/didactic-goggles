@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.vpn.R
 import com.example.vpn.common.base.BaseFragment
@@ -17,6 +18,7 @@ import com.example.vpn.core.config.TelemetryConfig
 import com.example.vpn.core.serverSelector.TestPoint
 import com.example.vpn.databinding.FragmentSpeedTestBinding
 import com.example.vpn.ui.settings.speedtest.State.*
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -41,83 +43,88 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
     @SuppressLint("SetTextI18n")
     private fun initObservers() {
         viewModel.run {
-            state.observe(viewLifecycleOwner) { state ->
-                when(state){
-                    INITIAL.value -> {
-                        binding.tvStatus.visibility = View.INVISIBLE
-                        binding.pbCalculating.visibility = View.INVISIBLE
-                        binding.btnStartStop.visibility = View.INVISIBLE
-                        binding.tvBtnName.visibility = View.INVISIBLE
-                        binding.ivStop.visibility = View.INVISIBLE
-                        binding.ivBackgroundResult.visibility = View.INVISIBLE
-                        binding.tvServerName.visibility = View.INVISIBLE
-                        binding.llResult.visibility = View.INVISIBLE
-                        binding.llSelect.visibility = View.INVISIBLE
-                        binding.llInitial.visibility = View.VISIBLE
-                    }
-                    SELECT.value -> {
-                        binding.tvStatus.visibility = View.VISIBLE
-                        binding.tvStatus.setText(R.string.fr_speed_test_press_to_check)
-                        binding.pbCalculating.visibility = View.INVISIBLE
-                        binding.btnStartStop.visibility = View.VISIBLE
-                        binding.tvBtnName.visibility = View.VISIBLE
-                        binding.tvBtnName.setText(com.example.vpn.R.string.fr_speed_test_start)
-                        binding.ivStop.visibility = View.INVISIBLE
-                        binding.ivBackgroundResult.visibility = View.VISIBLE
-                        binding.tvServerName.visibility = View.VISIBLE
-                        binding.llResult.visibility = View.INVISIBLE
-                        binding.llSelect.visibility = View.VISIBLE
-                        binding.llInitial.visibility = View.INVISIBLE
-
-                    }
-                    CALCULATING.value -> {
-                        binding.tvStatus.visibility = View.VISIBLE
-                        binding.tvStatus.setText(R.string.fr_speed_test_calculation)
-                        binding.pbCalculating.visibility = View.VISIBLE
-                        binding.btnStartStop.visibility = View.INVISIBLE
-                        binding.tvBtnName.visibility = View.INVISIBLE
-                        binding.ivStop.visibility = View.VISIBLE
-                        binding.ivBackgroundResult.visibility = View.VISIBLE
-                        binding.tvServerName.visibility = View.VISIBLE
-                        binding.llResult.visibility = View.INVISIBLE
-                        binding.llSelect.visibility = View.INVISIBLE
-                        binding.llInitial.visibility = View.INVISIBLE
-                    }
-                    DONE.value -> {
-                        binding.tvStatus.visibility = View.VISIBLE
-                        binding.tvStatus.setText(R.string.fr_speed_test_press_to_check)
-                        binding.pbCalculating.visibility = View.INVISIBLE
-                        binding.btnStartStop.visibility = View.VISIBLE
-                        binding.tvBtnName.visibility = View.VISIBLE
-                        binding.tvBtnName.setText(R.string.fr_speed_test_restart)
-                        binding.ivStop.visibility = View.INVISIBLE
-                        binding.ivBackgroundResult.visibility = View.VISIBLE
-                        binding.tvServerName.visibility = View.VISIBLE
-                        binding.llResult.visibility = View.VISIBLE
-                        binding.llSelect.visibility = View.INVISIBLE
-                        binding.llInitial.visibility = View.INVISIBLE
-                        binding.btnStartStop.setOnClickListener {
-                            initScreen()
+            viewLifecycleOwner.lifecycleScope.launch {
+                state.collect { state ->
+                    when (state) {
+                        INITIAL.value -> {
+                            binding.tvStatus.visibility = View.INVISIBLE
+                            binding.pbCalculating.visibility = View.INVISIBLE
+                            binding.btnStartStop.visibility = View.INVISIBLE
+                            binding.tvBtnName.visibility = View.INVISIBLE
+                            binding.ivStop.visibility = View.INVISIBLE
+                            binding.ivBackgroundResult.visibility = View.INVISIBLE
+                            binding.tvServerName.visibility = View.INVISIBLE
+                            binding.llResult.visibility = View.INVISIBLE
+                            binding.llSelect.visibility = View.INVISIBLE
+                            binding.llInitial.visibility = View.VISIBLE
                         }
-                    }
-                    ERROR.value -> {
-                        binding.tvStatus.visibility = View.VISIBLE
-                        binding.tvStatus.setText(R.string.fr_speed_test_error)
-                        binding.pbCalculating.visibility = View.INVISIBLE
-                        binding.btnStartStop.visibility = View.VISIBLE
-                        binding.tvBtnName.visibility = View.VISIBLE
-                        binding.tvBtnName.setText(R.string.fr_speed_test_restart)
-                        binding.ivStop.visibility = View.INVISIBLE
-                        binding.ivBackgroundResult.visibility = View.VISIBLE
-                        binding.tvServerName.visibility = View.VISIBLE
-                        binding.tvDownloadValue.text = "0 ${resources.getString(R.string.fr_speed_test_mbps)}"
-                        binding.tvUploadValue.text = "0 ${resources.getString(R.string.fr_speed_test_mbps)}"
-                        binding.tvPingValue.text = "0 ${resources.getString(R.string.fr_speed_test_ms)}"
-                        binding.llResult.visibility = View.VISIBLE
-                        binding.llSelect.visibility = View.INVISIBLE
-                        binding.llInitial.visibility = View.INVISIBLE
-                        binding.btnStartStop.setOnClickListener {
-                            initScreen()
+                        SELECT.value -> {
+                            binding.tvStatus.visibility = View.VISIBLE
+                            binding.tvStatus.setText(R.string.fr_speed_test_press_to_check)
+                            binding.pbCalculating.visibility = View.INVISIBLE
+                            binding.btnStartStop.visibility = View.VISIBLE
+                            binding.tvBtnName.visibility = View.VISIBLE
+                            binding.tvBtnName.setText(com.example.vpn.R.string.fr_speed_test_start)
+                            binding.ivStop.visibility = View.INVISIBLE
+                            binding.ivBackgroundResult.visibility = View.VISIBLE
+                            binding.tvServerName.visibility = View.VISIBLE
+                            binding.llResult.visibility = View.INVISIBLE
+                            binding.llSelect.visibility = View.VISIBLE
+                            binding.llInitial.visibility = View.INVISIBLE
+
+                        }
+                        CALCULATING.value -> {
+                            binding.tvStatus.visibility = View.VISIBLE
+                            binding.tvStatus.setText(R.string.fr_speed_test_calculation)
+                            binding.pbCalculating.visibility = View.VISIBLE
+                            binding.btnStartStop.visibility = View.INVISIBLE
+                            binding.tvBtnName.visibility = View.INVISIBLE
+                            binding.ivStop.visibility = View.VISIBLE
+                            binding.ivBackgroundResult.visibility = View.VISIBLE
+                            binding.tvServerName.visibility = View.VISIBLE
+                            binding.llResult.visibility = View.INVISIBLE
+                            binding.llSelect.visibility = View.INVISIBLE
+                            binding.llInitial.visibility = View.INVISIBLE
+                        }
+                        DONE.value -> {
+                            binding.tvStatus.visibility = View.VISIBLE
+                            binding.tvStatus.setText(R.string.fr_speed_test_press_to_check)
+                            binding.pbCalculating.visibility = View.INVISIBLE
+                            binding.btnStartStop.visibility = View.VISIBLE
+                            binding.tvBtnName.visibility = View.VISIBLE
+                            binding.tvBtnName.setText(R.string.fr_speed_test_restart)
+                            binding.ivStop.visibility = View.INVISIBLE
+                            binding.ivBackgroundResult.visibility = View.VISIBLE
+                            binding.tvServerName.visibility = View.VISIBLE
+                            binding.llResult.visibility = View.VISIBLE
+                            binding.llSelect.visibility = View.INVISIBLE
+                            binding.llInitial.visibility = View.INVISIBLE
+                            binding.btnStartStop.setOnClickListener {
+                                initScreen()
+                            }
+                        }
+                        ERROR.value -> {
+                            binding.tvStatus.visibility = View.VISIBLE
+                            binding.tvStatus.setText(R.string.fr_speed_test_error)
+                            binding.pbCalculating.visibility = View.INVISIBLE
+                            binding.btnStartStop.visibility = View.VISIBLE
+                            binding.tvBtnName.visibility = View.VISIBLE
+                            binding.tvBtnName.setText(R.string.fr_speed_test_restart)
+                            binding.ivStop.visibility = View.INVISIBLE
+                            binding.ivBackgroundResult.visibility = View.VISIBLE
+                            binding.tvServerName.visibility = View.VISIBLE
+                            binding.tvDownloadValue.text =
+                                "0 ${resources.getString(R.string.fr_speed_test_mbps)}"
+                            binding.tvUploadValue.text =
+                                "0 ${resources.getString(R.string.fr_speed_test_mbps)}"
+                            binding.tvPingValue.text =
+                                "0 ${resources.getString(R.string.fr_speed_test_ms)}"
+                            binding.llResult.visibility = View.VISIBLE
+                            binding.llSelect.visibility = View.INVISIBLE
+                            binding.llInitial.visibility = View.INVISIBLE
+                            binding.btnStartStop.setOnClickListener {
+                                initScreen()
+                            }
                         }
                     }
                 }

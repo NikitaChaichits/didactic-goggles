@@ -9,7 +9,9 @@ import com.example.vpn.domain.result.onSuccess
 import com.example.vpn.domain.usecase.VpnUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,6 +31,9 @@ class MainFragmentViewModel @Inject constructor(
 
     private val _vpnStart = MutableStateFlow(false)
     val vpnStart: StateFlow<Boolean> = _vpnStart.asStateFlow()
+
+    private val _status = MutableStateFlow("")
+    val status : StateFlow<String> = _status.asStateFlow()
 
 
     fun setNewCountryList(selectedItem: Country) {
@@ -92,5 +97,9 @@ class MainFragmentViewModel @Inject constructor(
 
     fun setVpnStart(isStart: Boolean){
         _vpnStart.value = isStart
+    }
+
+    fun setStatus(status: String) {
+        _status.value = status
     }
 }
