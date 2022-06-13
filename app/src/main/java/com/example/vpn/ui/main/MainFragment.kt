@@ -215,11 +215,16 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         // reconnect
-        if (vpnStart){
-            stopVpn()
-            viewModel.setStatus(RECONNECTING.value)
-            startVpn()
+        try {
+            if (vpnStart){
+                stopVpn()
+                viewModel.setStatus(RECONNECTING.value)
+                startVpn()
+            }
+        }catch (e: Exception){
+            Log.e("MainFragment","reconnecting error = " + e.message.toString())
         }
+
     }
 
     private fun setSingleItem(country: Country?) {

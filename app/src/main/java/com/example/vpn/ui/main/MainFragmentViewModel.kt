@@ -84,9 +84,7 @@ class MainFragmentViewModel @Inject constructor(
          viewModelScope.launch(Dispatchers.IO)  {
             useCase.getServerConfig(serverIp)
                 .onSuccess { configResponse ->
-                    Log.d("MainFragmentViewModel", "ServerConfig = \n${configResponse.body()}")
                     _serverConfig.value = configResponse.body() ?: ""
-                    Log.e("MainFragmentViewModel", "conf = ${serverConfig.value}")
                 }
                 .onError {
                     error.emit(it)

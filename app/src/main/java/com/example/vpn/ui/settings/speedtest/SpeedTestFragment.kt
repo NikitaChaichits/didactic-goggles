@@ -148,16 +148,16 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
         object : Thread() {
             override fun run() {
                 activity?.runOnUiThread{ viewModel.setState(INITIAL.value) }
-                var config: SpeedtestConfig? = null
-                var telemetryConfig: TelemetryConfig? = null
+//                var config: SpeedtestConfig? = null
+//                var telemetryConfig: TelemetryConfig? = null
                 var servers: Array<TestPoint>? = null
                 try {
-                    var c: String = readFileFromAssets("SpeedtestConfig.json")!!
-                    var o = JSONObject(c)
-                    config = SpeedtestConfig(o)
-                    c = readFileFromAssets("TelemetryConfig.json")!!
-                    o = JSONObject(c)
-                    telemetryConfig = TelemetryConfig(o)
+//                    var c: String = readFileFromAssets("SpeedtestConfig.json")!! //empty
+//                    var o = JSONObject(c)
+//                    config = SpeedtestConfig(o)
+//                    c = readFileFromAssets("TelemetryConfig2.json")!! // it doesn't need
+//                    o = JSONObject(c)
+//                    telemetryConfig = TelemetryConfig(o)
                     if (st != null) {
                         try {
                             st?.abort()
@@ -166,9 +166,9 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                         }
                     }
                     st = Speedtest()
-                    st?.setSpeedtestConfig(config)
-                    st?.setTelemetryConfig(telemetryConfig)
-                    c = readFileFromAssets("ServerList.json")!!
+//                    st?.setSpeedtestConfig(config)
+//                    st?.setTelemetryConfig(telemetryConfig)
+                    val c = readFileFromAssets("ServerList.json")!!
                     if (c.startsWith("\"") || c.startsWith("'")) { //fetch server list from URL
                         if (!st!!.loadServerList(
                                 c.subSequence(1, c.length - 1).toString()
@@ -233,7 +233,16 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
 
             binding.btnStartStop.setOnClickListener {
                 reInitOnResume = false
-                calculationScreen(availableServers[spinner.selectedItemPosition])
+//                calculationScreen(availableServers[spinner.selectedItemPosition])
+                calculationScreen( TestPoint(
+                    "My Server",
+                    "//nl1.backend.librespeed.org",
+//                                "68.183.198.104",
+                    "garbage.php",
+                    "empty.php",
+                    "empty.php",
+                    "getIP.php"
+                ))
                 binding.btnStartStop.setOnClickListener(null)
             }
         }
