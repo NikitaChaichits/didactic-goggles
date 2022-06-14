@@ -13,14 +13,11 @@ import com.example.vpn.common.base.BaseFragment
 import com.example.vpn.core.Speedtest
 import com.example.vpn.core.Speedtest.ServerSelectedHandler
 import com.example.vpn.core.Speedtest.SpeedtestHandler
-import com.example.vpn.core.config.SpeedtestConfig
-import com.example.vpn.core.config.TelemetryConfig
 import com.example.vpn.core.serverSelector.TestPoint
 import com.example.vpn.databinding.FragmentSpeedTestBinding
 import com.example.vpn.ui.settings.speedtest.State.*
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.EOFException
 import java.io.InputStreamReader
@@ -30,7 +27,7 @@ import kotlin.math.roundToInt
 class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
 
     private val binding by viewBinding(FragmentSpeedTestBinding::bind)
-    override val viewModel: SpeedTestFragmentViewModel by viewModels()
+    override val viewModel: SpeedTestViewModel by viewModels()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

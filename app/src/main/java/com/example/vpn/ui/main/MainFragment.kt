@@ -26,6 +26,7 @@ import com.example.vpn.data.vpn.util.CheckInternetConnection
 import com.example.vpn.databinding.FragmentMainBinding
 import com.example.vpn.domain.model.Country
 import com.example.vpn.ui.main.Status.*
+import com.example.vpn.ui.connection.alert.adapter.IssuesResultAdapter
 import com.example.vpn.ui.main.adapter.BottomSheetAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
@@ -104,6 +105,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 when (status) {
                     CONNECT.value -> {
                         binding.btnStartStop.isEnabled = true
+                        binding.ivSettings.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground))
@@ -111,6 +113,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                     }
                     CONNECTING.value -> {
                         binding.btnStartStop.isEnabled = true
+                        binding.ivSettings.isEnabled = false
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground))
@@ -118,6 +121,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                     }
                     CONNECTED.value -> {
                         binding.btnStartStop.isEnabled = true
+                        binding.ivSettings.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.shareButton_background))
@@ -125,6 +129,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                     }
                     RECONNECTING.value -> {
                         binding.btnStartStop.isEnabled = false
+                        binding.ivSettings.isEnabled = false
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground))
@@ -344,12 +349,14 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     fun setStatus(connectionState: String?) {
         if (connectionState != null) when (connectionState) {
             "DISCONNECTED" -> {
+                //TODO handle this status
+                viewModel.setStatus(CONNECT.value)
                 viewModel.setVpnStart(false)
                 OpenVPNService.setDefaultStatus()
             }
             "CONNECTED" -> {
-                viewModel.setVpnStart(true) // it will use after restart this activity
                 viewModel.setStatus(CONNECTED.value)
+                viewModel.setVpnStart(true) // it will use after restart this activity
             }
 //            "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
 //            "AUTH" -> binding.tvStatus.text = "server authenticating!!"
