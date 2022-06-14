@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vpn.databinding.CountryItemBinding
 import com.example.vpn.domain.model.Country
+import com.example.vpn.ui.connection.alert.adapter.IssuesResultAdapter
 
 class BottomSheetAdapter(
     private val chooseCountry: (itemPosition: Int) -> Unit
