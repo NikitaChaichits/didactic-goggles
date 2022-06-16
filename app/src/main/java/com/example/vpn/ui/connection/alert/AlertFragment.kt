@@ -102,7 +102,7 @@ class AlertFragment : BaseFragment(R.layout.fragment_alert) {
                         binding.clMessageFounded.visibility = View.VISIBLE
                         binding.rvMessageResult.visibility = View.INVISIBLE
 
-                        binding.ivMain.setImageResource(R.drawable.ic_bug)
+                        binding.ivMain.setImageResource(R.drawable.ic_bug_red)
                         binding.tvTitle.text = String.format(getString(
                             R.string.fr_alert_issues), issues)
                         binding.tvTitle2.setText(R.string.fr_alert_were_founded)

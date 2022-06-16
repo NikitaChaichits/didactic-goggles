@@ -26,8 +26,9 @@ import com.example.vpn.data.vpn.util.CheckInternetConnection
 import com.example.vpn.databinding.FragmentMainBinding
 import com.example.vpn.domain.model.Country
 import com.example.vpn.ui.main.Status.*
-import com.example.vpn.ui.connection.alert.adapter.IssuesResultAdapter
 import com.example.vpn.ui.main.adapter.BottomSheetAdapter
+import com.example.vpn.util.view.invisible
+import com.example.vpn.util.view.visible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import de.blinkt.openvpn.OpenVpnApi
@@ -43,7 +44,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     override val viewModel by activityViewModels<MainFragmentViewModel>()
     private val adapter by lazy { BottomSheetAdapter(::chooseCountry) }
 
-    private lateinit var prefs : SharedPreferencesDataSource
+    private lateinit var prefs: SharedPreferencesDataSource
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
     private val countryList: MutableList<Country> = mutableListOf()
 
@@ -59,6 +60,34 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         observeViewModels()
     }
 
+    /**
+     * Change server when user select new server
+     * @param server ovpn server details
+     */
+    override fun newServer() {
+        if (vpnStart) {
+            stopVpn()
+        }
+        prepareVpn()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setupBottomBehavior()
+        setupRecyclerView()
+    }
+
+    override fun onResume() {
+        LocalBroadcastManager.getInstance(requireActivity())
+            .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))
+        super.onResume()
+    }
+
+    override fun onPause() {
+        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(broadcastReceiver)
+        super.onPause()
+    }
+
     private fun initAll() {
         prefs = SharedPreferencesDataSource(requireContext())
         viewModel.getListFromApi(prefs.getCountryName())
@@ -66,18 +95,20 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     }
 
     private fun initListeners() {
-        binding.ivSettings.setOnClickListener {
-            navigate(R.id.action_main_fragment_to_settings_fragment)
-        }
-        binding.btnStartStop.setOnClickListener {
-            if (behavior.state == BottomSheetBehavior.STATE_EXPANDED)
-                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        with(binding) {
+            ivSettings.setOnClickListener {
+                navigate(R.id.action_main_fragment_to_settings_fragment)
+            }
+            btnStartStop.setOnClickListener {
+                if (behavior.state == BottomSheetBehavior.STATE_EXPANDED)
+                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-            if (vpnStart) {
-                confirmDisconnect()
-            } else {
-                viewModel.setStatus(CONNECTING.value)
-                prepareVpn()
+                if (vpnStart) {
+                    confirmDisconnect()
+                } else {
+                    viewModel.setStatus(CONNECTING.value)
+                    prepareVpn()
+                }
             }
         }
     }
@@ -98,6 +129,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.vpnStart.collect {
                 vpnStart = it
+                if (it){
+                    binding.avConnectionOn.visible()
+                    binding.avNoConnection.invisible()
+                } else {
+                    binding.avConnectionOn.invisible()
+                    binding.avNoConnection.visible()
+                }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -155,13 +193,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     }
 
     // Bottom Sheet
-
-    override fun onStart() {
-        super.onStart()
-        setupBottomBehavior()
-        setupRecyclerView()
-    }
-
     private fun setupBottomBehavior() {
         behavior = BottomSheetBehavior.from(binding.bottomSheet)
 
@@ -221,13 +252,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
         // reconnect
         try {
-            if (vpnStart){
+            if (vpnStart) {
                 stopVpn()
                 viewModel.setStatus(RECONNECTING.value)
                 startVpn()
             }
-        }catch (e: Exception){
-            Log.e("MainFragment","reconnecting error = " + e.message.toString())
+        } catch (e: Exception) {
+            Log.e("MainFragment", "reconnecting error = " + e.message.toString())
         }
 
     }
@@ -236,7 +267,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         binding.singleItem.visibility = View.VISIBLE
         binding.progressBar.visibility = View.INVISIBLE
 
-        if (country != null){
+        if (country != null) {
             binding.include.ivFlag.setImageResource(country.flag)
             binding.include.tvCountry.text = country.fullName
 
@@ -244,16 +275,14 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 binding.include.tvBestChoice.visibility = View.VISIBLE
             else
                 binding.include.tvBestChoice.visibility = View.GONE
-        } else{
+        } else {
             binding.include.ivFlag.setImageResource(R.drawable.ic_placeholder)
-            binding.include.tvCountry.text ="Unknown country"
+            binding.include.tvCountry.text = "Unknown country"
         }
     }
 
-
-    // Work with VPN
-
     /**
+     * Work with VPN
      * Prepare for vpn connect with required permission
      */
     private fun prepareVpn() {
@@ -315,57 +344,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     }
 
     /**
-     * Receive broadcast message
-     */
-    private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            try {
-                setStatus(intent.getStringExtra("state"))
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-            try {
-                var duration = intent.getStringExtra("duration")
-                var lastPacketReceive = intent.getStringExtra("lastPacketReceive")
-                var byteIn = intent.getStringExtra("byteIn")
-                var byteOut = intent.getStringExtra("byteOut")
-                if (duration == null) duration = "00:00:00"
-                if (lastPacketReceive == null) lastPacketReceive = "0"
-                if (byteIn == null) byteIn = " "
-                if (byteOut == null) byteOut = " "
-                Log.d("Main Fragment",
-                    "duration = $duration, lastPacketReceive = $lastPacketReceive, " +
-                            "byteIn = $byteIn, byteOut = $byteOut")
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    /**
-     * Status change with corresponding vpn connection status
-     * @param connectionState
-     */
-    fun setStatus(connectionState: String?) {
-        if (connectionState != null) when (connectionState) {
-            "DISCONNECTED" -> {
-                //TODO handle this status
-                viewModel.setStatus(CONNECT.value)
-                viewModel.setVpnStart(false)
-                OpenVPNService.setDefaultStatus()
-            }
-            "CONNECTED" -> {
-                viewModel.setStatus(CONNECTED.value)
-                viewModel.setVpnStart(true) // it will use after restart this activity
-            }
-//            "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
-//            "AUTH" -> binding.tvStatus.text = "server authenticating!!"
-//            "RECONNECTING" -> binding.tvStatus.text = "Reconnecting..."
-//            "NONETWORK" -> binding.tvStatus.text = "No network connection"
-        }
-    }
-
-    /**
      * Show show disconnect confirm dialog
      */
     private fun confirmDisconnect() {
@@ -403,6 +381,59 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     }
 
     /**
+     * Status change with corresponding vpn connection status
+     * @param connectionState
+     */
+    fun setStatus(connectionState: String?) {
+        if (connectionState != null) when (connectionState) {
+            "DISCONNECTED" -> {
+                //TODO handle this status
+                viewModel.setStatus(CONNECT.value)
+                viewModel.setVpnStart(false)
+                OpenVPNService.setDefaultStatus()
+            }
+            "CONNECTED" -> {
+                viewModel.setStatus(CONNECTED.value)
+                viewModel.setVpnStart(true) // it will use after restart this activity
+            }
+//            "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
+//            "AUTH" -> binding.tvStatus.text = "server authenticating!!"
+//            "RECONNECTING" -> binding.tvStatus.text = "Reconnecting..."
+//            "NONETWORK" -> binding.tvStatus.text = "No network connection"
+        }
+    }
+
+    /**
+     * Receive broadcast message
+     */
+    private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                setStatus(intent.getStringExtra("state"))
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+            try {
+                var duration = intent.getStringExtra("duration")
+                var lastPacketReceive = intent.getStringExtra("lastPacketReceive")
+                var byteIn = intent.getStringExtra("byteIn")
+                var byteOut = intent.getStringExtra("byteOut")
+                if (duration == null) duration = "00:00:00"
+                if (lastPacketReceive == null) lastPacketReceive = "0"
+                if (byteIn == null) byteIn = " "
+                if (byteOut == null) byteOut = " "
+                Log.d(
+                    "Main Fragment",
+                    "duration = $duration, lastPacketReceive = $lastPacketReceive, " +
+                            "byteIn = $byteIn, byteOut = $byteOut"
+                )
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    /**
      * Internet connection status.
      */
     private fun getInternetStatus(): Boolean {
@@ -415,26 +446,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
      */
     private fun showToast(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-    /**
-     * Change server when user select new server
-     * @param server ovpn server details
-     */
-    override fun newServer() {
-        if (vpnStart) { stopVpn() }
-        prepareVpn()
-    }
-
-    override fun onResume() {
-        LocalBroadcastManager.getInstance(requireActivity())
-            .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))
-        super.onResume()
-    }
-
-    override fun onPause() {
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(broadcastReceiver)
-        super.onPause()
     }
 
 }

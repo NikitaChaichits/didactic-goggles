@@ -45,10 +45,11 @@
             android:id="@+id/btnStartStop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="360dp"
+            android:layout_marginTop="120dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ivBackgroundOff"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_circle_start_button" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -69,9 +70,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:text="@string/fr_main_press_to_connect"
             android:textColor="#8E8E93"
             android:textSize="15sp"
-            android:text="@string/fr_main_press_to_connect"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnStartStop"
@@ -79,7 +80,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    bottom sheet-->
+    <!--    bottom sheet-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
@@ -88,7 +89,7 @@
         android:layout_margin="@dimen/common_offset_xs"
         android:background="@drawable/bottom_sheet_background"
         app:behavior_peekHeight="112dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" >
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_collapsed"
@@ -160,13 +161,13 @@
                     android:id="@+id/imgClose"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:importantForAccessibility="no"
                     android:layout_marginStart="22dp"
+                    android:importantForAccessibility="no"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_close2"
-                    android:visibility="visible"
                     app:tint="#8E8E93" />
 
                 <androidx.appcompat.widget.AppCompatTextView

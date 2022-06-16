@@ -7,25 +7,14 @@
     android:background="@color/black">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/avLoading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_l"
-        android:layout_marginBottom="@dimen/common_offset_l"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="button_speedtest.json"
-        app:lottie_loop="true" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivBackgroundOff"
+        android:id="@+id/avNoConnection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_background" />
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="before_connection.json"
+        app:lottie_loop="true" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivBackgroundResult"
@@ -33,7 +22,7 @@
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/ivBackgroundOff"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/ic_result_bg" />
 
     <TextView
@@ -98,9 +87,9 @@
 
         <Spinner
             android:id="@+id/spSelectServer"
-            android:layout_marginTop="@dimen/common_offset_m"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_offset_m"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -109,12 +98,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:bar_color="#00FFFFFF"
-        app:progress_color="@color/white"
-        app:progress_width="@dimen/common_offset_xxs"
         app:layout_constraintBottom_toBottomOf="@+id/btnStartStop"
         app:layout_constraintEnd_toEndOf="@+id/btnStartStop"
         app:layout_constraintStart_toStartOf="@+id/btnStartStop"
-        app:layout_constraintTop_toTopOf="@+id/btnStartStop" />
+        app:layout_constraintTop_toTopOf="@+id/btnStartStop"
+        app:progress_color="@color/white"
+        app:progress_width="@dimen/common_offset_xxs" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btnBack"
@@ -158,7 +147,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnStartStop"
-        app:srcCompat="@drawable/ic_stop"/>
+        app:srcCompat="@drawable/ic_stop" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvStatus"
@@ -181,7 +170,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnStartStop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ivBackgroundResult" >
+        app:layout_constraintTop_toTopOf="@+id/ivBackgroundResult">
 
         <TextView
             android:id="@+id/tvDownloadValue"
@@ -189,9 +178,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="74dp"
             android:gravity="center"
-            tools:text="128 mbps"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            tools:text="128 mbps" />
 
         <TextView
             android:id="@+id/tvDownload"
@@ -209,9 +198,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/common_offset_3xl"
             android:gravity="center"
-            tools:text="128 mbps"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            tools:text="128 mbps" />
 
         <TextView
             android:id="@+id/tvUpload"

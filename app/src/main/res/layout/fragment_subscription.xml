@@ -5,13 +5,15 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivBackgroundOff"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/avNoConnection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_background" />
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="before_connection.json"
+        app:lottie_loop="true" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivClose"
@@ -30,9 +32,9 @@
         android:layout_marginTop="@dimen/common_offset_m"
         android:layout_marginEnd="@dimen/common_offset_m"
         android:text="@string/fr_subscription_purchased"
-        android:textStyle="bold"
-        android:textSize="@dimen/common_textSize_l"
         android:textColor="@color/white"
+        android:textSize="@dimen/common_textSize_l"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/ivClose"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivClose" />
@@ -69,9 +71,9 @@
 
         <com.example.vpn.util.view.Subscription
             android:id="@+id/subscriptionAnnual"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="@dimen/common_offset_xs"
             app:description="@string/fr_subscription_description1"
             app:isChecked="true"
@@ -79,18 +81,18 @@
 
         <com.example.vpn.util.view.Subscription
             android:id="@+id/subscriptionMonthly"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="@dimen/common_offset_xs"
             app:description="@string/fr_subscription_description2"
             app:name="@string/fr_subscription_type2" />
 
         <com.example.vpn.util.view.Subscription
             android:id="@+id/subscriptionWeek"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:visibility="gone"
             app:description="@string/fr_subscription_description3"
             app:name="@string/fr_subscription_type3" />
