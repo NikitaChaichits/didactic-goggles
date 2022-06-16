@@ -1,161 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black">
+    android:layout_height="match_parent">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/avNoConnection"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="before_connection.json"
-        app:lottie_loop="true" />
+        android:background="@color/black">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/avConnectionOn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="after_connection.json"
-        app:lottie_loop="true" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/avNoConnection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="before_connection.json"
+            app:lottie_loop="true" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_m"
-        android:layout_marginEnd="@dimen/common_offset_m"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_settings" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/avConnectionOn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="after_connection.json"
+            app:lottie_loop="true" />
 
-    <View
-        android:id="@+id/centerSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/btnStartStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_l"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/centerSeparator"
-        app:srcCompat="@drawable/ic_circle_start_button" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/avLoading1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/centerSeparator"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="button_loading_main.json"
-        app:lottie_loop="true" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvBtnName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fr_main_btn_start"
-        android:textColor="@color/white"
-        android:textSize="@dimen/common_textSize_m"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/btnStartStop"
-        app:layout_constraintEnd_toEndOf="@id/btnStartStop"
-        app:layout_constraintStart_toStartOf="@id/btnStartStop"
-        app:layout_constraintTop_toTopOf="@id/btnStartStop" />
-
-    <Button
-        android:id="@+id/btnConnect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:tag="1"
-        android:text="@string/fr_main_btn_connect"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStartStop" />
-
-    <TextView
-        android:id="@+id/logTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:textColor="#ffffff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnConnect"
-        tools:text="TextView" />
-
-    <LinearLayout
-        android:id="@+id/connectionStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/logTv">
-
-        <TextView
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Connection Status"
+            android:layout_marginTop="@dimen/common_offset_m"
+            android:layout_marginEnd="@dimen/common_offset_m"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_settings" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btnStartStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="360dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivBackgroundOff"
+            app:srcCompat="@drawable/ic_circle_start_button" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvBtnName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fr_main_btn_start"
             android:textColor="@color/white"
+            android:textSize="@dimen/common_textSize_m"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btnStartStop"
+            app:layout_constraintEnd_toEndOf="@id/btnStartStop"
+            app:layout_constraintStart_toStartOf="@id/btnStartStop"
+            app:layout_constraintTop_toTopOf="@id/btnStartStop" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="#8E8E93"
             android:textSize="15sp"
-            android:textStyle="bold" />
+            android:text="@string/fr_main_press_to_connect"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnStartStop"
+            tools:text="TextView" />
 
-        <TextView
-            android:id="@+id/durationTv"
-            android:layout_width="wrap_content"
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    bottom sheet-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_offset_xs"
+        android:background="@drawable/bottom_sheet_background"
+        app:behavior_peekHeight="112dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_collapsed"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvTitleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/common_offset_m"
+                android:layout_marginTop="22dp"
+                android:gravity="start|center_vertical"
+                android:text="@string/fr_bottom_title"
+                android:textColor="#8E8E93"
+                android:textSize="11sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/singleItem"
+                app:layout_constraintEnd_toEndOf="@+id/singleItem"
+                app:layout_constraintStart_toStartOf="@id/singleItem"
+                app:layout_constraintTop_toTopOf="@+id/singleItem" />
+
+            <FrameLayout
+                android:id="@+id/singleItem"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="18dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitleSmall">
+
+                <include
+                    android:id="@+id/include"
+                    layout="@layout/country_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layout_expanded"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Duration: 00:00:00"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/lastPacketReceiveTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Packet Received:"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/byteInTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Bytes In: "
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgClose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:layout_marginStart="22dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_close2"
+                    android:visibility="visible"
+                    app:tint="#8E8E93" />
 
-        <TextView
-            android:id="@+id/byteOutTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Bytes OUT: "
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginBottom="22dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/fr_bottom_title"
+                    android:textColor="#ffffff"
+                    android:textSize="23sp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imgClose"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCountries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/country_item" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
