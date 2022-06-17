@@ -128,18 +128,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.vpnStart.collect {
-                vpnStart = it
-                if (it){
-                    binding.avConnectionOn.visible()
-                    binding.avNoConnection.invisible()
-                } else {
-                    binding.avConnectionOn.invisible()
-                    binding.avNoConnection.visible()
-                }
-            }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.status.collect { status ->
                 when (status) {
                     CONNECT.name -> {
@@ -149,6 +137,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground))
                         binding.tvStatus.text = resources.getString(R.string.fr_main_press_to_connect)
+
+                        binding.avConnectionOn.invisible()
+                        binding.avNoConnection.visible()
                     }
                     CONNECTING.name -> {
                         binding.btnStartStop.isEnabled = true
@@ -157,6 +148,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground))
                         binding.tvStatus.text  = resources.getString(R.string.fr_main_connecting)
+
+                        binding.avConnectionOn.invisible()
+                        binding.avNoConnection.visible()
                     }
                     CONNECTED.name -> {
                         binding.btnStartStop.isEnabled = true
@@ -165,6 +159,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.shareButton_background))
                         binding.tvStatus.text = resources.getString(R.string.fr_main_press_to_disconnect)
+
+                        binding.avConnectionOn.visible()
+                        binding.avNoConnection.invisible()
                     }
                     RECONNECTING.name -> {
                         binding.btnStartStop.isEnabled = false
@@ -173,6 +170,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground))
                         binding.tvStatus.text  = resources.getString(R.string.fr_main_reconnecting)
+
+                        binding.avConnectionOn.invisible()
+                        binding.avNoConnection.visible()
                     }
                 }
             }
@@ -397,19 +397,15 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     fun setStatus(connectionState: String?) {
         if (connectionState != null) when (connectionState) {
             "DISCONNECTED" -> {
-                //TODO handle this status
-                viewModel.setStatus(CONNECT.value)
+                if (viewModel.status.value != RECONNECTING.name)
+                    viewModel.setStatus(CONNECT.name)
                 viewModel.setVpnStart(false)
                 OpenVPNService.setDefaultStatus()
             }
             "CONNECTED" -> {
-                viewModel.setStatus(CONNECTED.value)
+                viewModel.setStatus(CONNECTED.name)
                 viewModel.setVpnStart(true) // it will use after restart this activity
             }
-//            "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
-//            "AUTH" -> binding.tvStatus.text = "server authenticating!!"
-//            "RECONNECTING" -> binding.tvStatus.text = "Reconnecting..."
-//            "NONETWORK" -> binding.tvStatus.text = "No network connection"
         }
     }
 
