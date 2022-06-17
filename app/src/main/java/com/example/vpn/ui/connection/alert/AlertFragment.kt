@@ -28,7 +28,11 @@ class AlertFragment : BaseFragment(R.layout.fragment_alert) {
     private lateinit var binding: FragmentAlertBinding
 
     private var state: String = INITIAL.name
+    // «X issues were found», где X - третий параметр пастборда (1&2&X)
     private var issues: Int = 3
+
+    //TODO Delete
+    var isSubscribed = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,8 +61,15 @@ class AlertFragment : BaseFragment(R.layout.fragment_alert) {
                     navigate(R.id.action_alert_fragment_to_scan_fragment)
                 }
                 FOUNDED.name -> {
-                    viewModel.setState(REMOVING.name)
-                    navigate(R.id.action_alert_fragment_to_scan_fragment)
+                    // Кнопка «Fix Connection Issues» - недельная подписка.
+                   // if ("subscription is successfull" == "") {
+                    if (isSubscribed) {
+                        viewModel.setState(REMOVING.name)
+                        navigate(R.id.action_alert_fragment_to_scan_fragment)
+                    } else {
+                        isSubscribed = true
+                        dialogBuilder(R.string.fr_alert_error).show()
+                    }
                 }
                 RESULT.name -> {
                     val intent = Intent(requireContext(), MainActivity::class.java)
@@ -75,18 +86,18 @@ class AlertFragment : BaseFragment(R.layout.fragment_alert) {
                 when (newState) {
                     INITIAL.name -> {
                         handleWithDelay(3000L) {
-                            binding.clInitial.visibility = View.INVISIBLE
+                            binding.clInitial.visibility = View.GONE
                             binding.clDetected.visibility = View.VISIBLE
                             viewModel.setState(DETECTED.name)
                         }
                     }
                     DETECTED.name -> {
-                        binding.clInitial.visibility = View.INVISIBLE
+                        binding.clInitial.visibility = View.GONE
                         binding.clDetected.visibility = View.VISIBLE
 
                         binding.clMessageDetected.visibility = View.VISIBLE
-                        binding.clMessageFounded.visibility = View.INVISIBLE
-                        binding.rvMessageResult.visibility = View.INVISIBLE
+                        binding.clMessageFounded.visibility = View.GONE
+                        binding.rvMessageResult.visibility = View.GONE
 
                         binding.ivMain.setImageResource(R.drawable.ic_attention)
                         binding.tvTitle.setText(R.string.fr_alert_detected)
@@ -95,12 +106,12 @@ class AlertFragment : BaseFragment(R.layout.fragment_alert) {
                         binding.ivDots.setImageResource(R.drawable.ic_three_dots_1)
                     }
                     FOUNDED.name -> {
-                        binding.clInitial.visibility = View.INVISIBLE
+                        binding.clInitial.visibility = View.GONE
                         binding.clDetected.visibility = View.VISIBLE
 
-                        binding.clMessageDetected.visibility = View.INVISIBLE
+                        binding.clMessageDetected.visibility = View.GONE
                         binding.clMessageFounded.visibility = View.VISIBLE
-                        binding.rvMessageResult.visibility = View.INVISIBLE
+                        binding.rvMessageResult.visibility = View.GONE
 
                         binding.ivMain.setImageResource(R.drawable.ic_bug_red)
                         binding.tvTitle.text = String.format(getString(
@@ -112,11 +123,11 @@ class AlertFragment : BaseFragment(R.layout.fragment_alert) {
                     RESULT.name -> {
                         setupRecyclerView()
 
-                        binding.clInitial.visibility = View.INVISIBLE
+                        binding.clInitial.visibility = View.GONE
                         binding.clDetected.visibility = View.VISIBLE
 
-                        binding.clMessageDetected.visibility = View.INVISIBLE
-                        binding.clMessageFounded.visibility = View.INVISIBLE
+                        binding.clMessageDetected.visibility = View.GONE
+                        binding.clMessageFounded.visibility = View.GONE
                         binding.rvMessageResult.visibility = View.VISIBLE
 
                         binding.ivMain.setImageResource(R.drawable.ic_verify)

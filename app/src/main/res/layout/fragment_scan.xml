@@ -7,16 +7,33 @@
     android:background="@color/bgConnection"
     tools:context=".ui.connection.scan.ScanFragment">
 
-
     <ImageView
         android:id="@+id/ivProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="131dp"
+        android:visibility="visible"
         android:src="@drawable/ic_progress"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.natasa.progressviews.CircleProgressBar
+        android:id="@+id/pbScanning"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tint="@color/white"
+        android:backgroundTint="@color/white"
+        app:bar_color="#0A000000"
+        app:bar_width="@dimen/common_offset_m"
+        app:layout_constraintBottom_toBottomOf="@+id/ivProgress"
+        app:layout_constraintEnd_toEndOf="@+id/ivProgress"
+        app:layout_constraintStart_toStartOf="@+id/ivProgress"
+        app:layout_constraintTop_toTopOf="@+id/ivProgress"
+        app:progress_color="@color/colorPrimary"
+        app:progress_width="@dimen/common_offset_m" />
 
     <TextView
         android:id="@+id/tvProgress"
@@ -54,4 +71,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitleBold" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
