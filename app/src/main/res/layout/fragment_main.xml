@@ -74,11 +74,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_offset_xs"
         android:background="@drawable/bottom_sheet_background"
-        app:behavior_peekHeight="112dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_collapsed"
+            android:id="@+id/layoutCollapsed"
             android:layout_width="match_parent"
             android:layout_height="112dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -125,12 +124,11 @@
 
             </FrameLayout>
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <LinearLayout
-            android:id="@+id/layout_expanded"
+            android:id="@+id/layoutExpanded"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

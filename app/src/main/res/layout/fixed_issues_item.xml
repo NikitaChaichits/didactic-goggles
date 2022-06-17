@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="4dp"
     android:layout_marginBottom="@dimen/common_offset_m"
     android:background="@drawable/bg_warning_connection">
 

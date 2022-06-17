@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -17,10 +16,6 @@ import com.example.vpn.core.serverSelector.TestPoint
 import com.example.vpn.databinding.FragmentSpeedTestBinding
 import com.example.vpn.ui.settings.speedtest.State.*
 import kotlinx.coroutines.launch
-import org.json.JSONArray
-import java.io.BufferedReader
-import java.io.EOFException
-import java.io.InputStreamReader
 import kotlin.math.roundToInt
 
 
@@ -43,34 +38,29 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
             viewLifecycleOwner.lifecycleScope.launch {
                 state.collect { state ->
                     when (state) {
-                        INITIAL.value -> {
+                        INITIAL.name -> {
                             binding.tvStatus.visibility = View.INVISIBLE
                             binding.pbCalculating.visibility = View.INVISIBLE
                             binding.btnStartStop.visibility = View.INVISIBLE
                             binding.tvBtnName.visibility = View.INVISIBLE
                             binding.ivStop.visibility = View.INVISIBLE
                             binding.ivBackgroundResult.visibility = View.INVISIBLE
-                            binding.tvServerName.visibility = View.INVISIBLE
                             binding.llResult.visibility = View.INVISIBLE
-                            binding.llSelect.visibility = View.INVISIBLE
                             binding.llInitial.visibility = View.VISIBLE
                         }
-                        SELECT.value -> {
+                        READY.name -> {
                             binding.tvStatus.visibility = View.VISIBLE
                             binding.tvStatus.setText(R.string.fr_speed_test_press_to_check)
                             binding.pbCalculating.visibility = View.INVISIBLE
                             binding.btnStartStop.visibility = View.VISIBLE
                             binding.tvBtnName.visibility = View.VISIBLE
-                            binding.tvBtnName.setText(com.example.vpn.R.string.fr_speed_test_start)
+                            binding.tvBtnName.setText(R.string.fr_speed_test_start)
                             binding.ivStop.visibility = View.INVISIBLE
-                            binding.ivBackgroundResult.visibility = View.VISIBLE
-                            binding.tvServerName.visibility = View.VISIBLE
+                            binding.ivBackgroundResult.visibility = View.INVISIBLE
                             binding.llResult.visibility = View.INVISIBLE
-                            binding.llSelect.visibility = View.VISIBLE
                             binding.llInitial.visibility = View.INVISIBLE
-
                         }
-                        CALCULATING.value -> {
+                        CALCULATING.name -> {
                             binding.tvStatus.visibility = View.VISIBLE
                             binding.tvStatus.setText(R.string.fr_speed_test_calculation)
                             binding.pbCalculating.visibility = View.VISIBLE
@@ -78,12 +68,10 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                             binding.tvBtnName.visibility = View.INVISIBLE
                             binding.ivStop.visibility = View.VISIBLE
                             binding.ivBackgroundResult.visibility = View.VISIBLE
-                            binding.tvServerName.visibility = View.VISIBLE
                             binding.llResult.visibility = View.INVISIBLE
-                            binding.llSelect.visibility = View.INVISIBLE
                             binding.llInitial.visibility = View.INVISIBLE
                         }
-                        DONE.value -> {
+                        DONE.name -> {
                             binding.tvStatus.visibility = View.VISIBLE
                             binding.tvStatus.setText(R.string.fr_speed_test_press_to_check)
                             binding.pbCalculating.visibility = View.INVISIBLE
@@ -92,15 +80,13 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                             binding.tvBtnName.setText(R.string.fr_speed_test_restart)
                             binding.ivStop.visibility = View.INVISIBLE
                             binding.ivBackgroundResult.visibility = View.VISIBLE
-                            binding.tvServerName.visibility = View.VISIBLE
                             binding.llResult.visibility = View.VISIBLE
-                            binding.llSelect.visibility = View.INVISIBLE
                             binding.llInitial.visibility = View.INVISIBLE
                             binding.btnStartStop.setOnClickListener {
                                 initScreen()
                             }
                         }
-                        ERROR.value -> {
+                        ERROR.name -> {
                             binding.tvStatus.visibility = View.VISIBLE
                             binding.tvStatus.setText(R.string.fr_speed_test_error)
                             binding.pbCalculating.visibility = View.INVISIBLE
@@ -109,7 +95,6 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                             binding.tvBtnName.setText(R.string.fr_speed_test_restart)
                             binding.ivStop.visibility = View.INVISIBLE
                             binding.ivBackgroundResult.visibility = View.VISIBLE
-                            binding.tvServerName.visibility = View.VISIBLE
                             binding.tvDownloadValue.text =
                                 "0 ${resources.getString(R.string.fr_speed_test_mbps)}"
                             binding.tvUploadValue.text =
@@ -117,7 +102,6 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                             binding.tvPingValue.text =
                                 "0 ${resources.getString(R.string.fr_speed_test_ms)}"
                             binding.llResult.visibility = View.VISIBLE
-                            binding.llSelect.visibility = View.INVISIBLE
                             binding.llInitial.visibility = View.INVISIBLE
                             binding.btnStartStop.setOnClickListener {
                                 initScreen()
@@ -144,17 +128,11 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
     private fun initScreen() {
         object : Thread() {
             override fun run() {
-                activity?.runOnUiThread{ viewModel.setState(INITIAL.value) }
-//                var config: SpeedtestConfig? = null
-//                var telemetryConfig: TelemetryConfig? = null
-                var servers: Array<TestPoint>? = null
+                activity?.runOnUiThread{ viewModel.setState(INITIAL.name) }
+
+                val servers: Array<TestPoint> = arrayOf(server)
+
                 try {
-//                    var c: String = readFileFromAssets("SpeedtestConfig.json")!! //empty
-//                    var o = JSONObject(c)
-//                    config = SpeedtestConfig(o)
-//                    c = readFileFromAssets("TelemetryConfig2.json")!! // it doesn't need
-//                    o = JSONObject(c)
-//                    telemetryConfig = TelemetryConfig(o)
                     if (st != null) {
                         try {
                             st?.abort()
@@ -163,28 +141,11 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                         }
                     }
                     st = Speedtest()
-//                    st?.setSpeedtestConfig(config)
-//                    st?.setTelemetryConfig(telemetryConfig)
-                    val c = readFileFromAssets("ServerList.json")!!
-                    if (c.startsWith("\"") || c.startsWith("'")) { //fetch server list from URL
-                        if (!st!!.loadServerList(
-                                c.subSequence(1, c.length - 1).toString()
-                            )
-                        ) {
-                            throw Exception("Failed to load server list")
-                        }
-                    } else { //use provided server list
-                        val a = JSONArray(c)
-                        if (a.length() == 0) throw Exception("No test points")
-                        val s = ArrayList<TestPoint>()
-                        for (i in 0 until a.length()) s.add(TestPoint(a.getJSONObject(i)))
-                        servers = s.toTypedArray()
-                        st?.addTestPoints(servers)
-                    }
+                    st?.addTestPoints(servers)
                 } catch (e: Throwable) {
                     System.err.println(e)
                     st = null
-                    activity?.runOnUiThread{ viewModel.setState(ERROR.value) }
+                    activity?.runOnUiThread{ viewModel.setState(ERROR.name) }
 
                     Log.e("SpeedTestFragment",
                         "${getString(R.string.initFail_configError)} + \": \" + ${e.message}")
@@ -194,10 +155,10 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                 st?.selectServer(object : ServerSelectedHandler() {
                     override fun onServerSelected(server: TestPoint?) {
                         if (server == null) {
-                            activity?.runOnUiThread{ viewModel.setState(ERROR.value) }
+                            activity?.runOnUiThread{ viewModel.setState(ERROR.name) }
                             Log.e("SpeedTestFragment", getString(R.string.initFail_noServers))
                         } else {
-                            selectServerScreen(server, st!!.testPoints)
+                            selectServerScreen()
                         }
                     }
                 })
@@ -205,54 +166,26 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
         }.start()
     }
 
-    private fun selectServerScreen(selected: TestPoint, servers: Array<TestPoint>) {
+    private fun selectServerScreen() {
         activity?.runOnUiThread {
-            viewModel.setState(SELECT.value)
+            viewModel.setState(READY.name)
             reInitOnResume = true
-            val availableServers = ArrayList<TestPoint>()
-            for (t in servers) {
-                if (t.ping != -1f) availableServers.add(t)
-            }
-            val selectedId = availableServers.indexOf(selected)
-            val spinner = binding.spSelectServer
-            val options = ArrayList<String>()
-            for (t in availableServers) {
-                options.add(t.name)
-            }
-            val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-                requireContext(),
-                R.layout.spinner_item,
-                options.toTypedArray()
-            )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
-            spinner.setSelection(selectedId)
 
             binding.btnStartStop.setOnClickListener {
                 reInitOnResume = false
-//                calculationScreen(availableServers[spinner.selectedItemPosition])
-                calculationScreen( TestPoint(
-                    "My Server",
-                    "//nl1.backend.librespeed.org",
-//                                "68.183.198.104",
-                    "garbage.php",
-                    "empty.php",
-                    "empty.php",
-                    "getIP.php"
-                ))
+                calculationScreen()
                 binding.btnStartStop.setOnClickListener(null)
             }
         }
     }
 
-    private fun calculationScreen(selected: TestPoint) {
-        activity?.runOnUiThread{ viewModel.setState(CALCULATING.value) }
-        st?.setSelectedServer(selected)
-        binding.tvServerName.text = selected.name //remove
+    private fun calculationScreen() {
+        activity?.runOnUiThread{ viewModel.setState(CALCULATING.name) }
+        st?.setSelectedServer(server)
 
         binding.ivStop.setOnClickListener {
             st?.abort()
-            activity?.runOnUiThread{ viewModel.setState(ERROR.value) }
+            activity?.runOnUiThread{ viewModel.setState(ERROR.name) }
         }
 
         val circleProgressBar = binding.pbCalculating
@@ -290,7 +223,7 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                     if (progress == 1.0){
                         binding.tvUploadValue.text =
                             "${format(ul)} ${resources.getString(R.string.fr_speed_test_mbps)}"
-                        activity?.runOnUiThread{ viewModel.setState(DONE.value) }
+                        activity?.runOnUiThread{ viewModel.setState(DONE.name) }
 
                     }
                 }
@@ -301,7 +234,7 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
             override fun onEnd() {}
 
             override fun onCriticalFailure(err: String) {
-                activity?.runOnUiThread{ viewModel.setState(ERROR.value) }
+                activity?.runOnUiThread{ viewModel.setState(ERROR.name) }
                 Log.e("SpeedTestFragment", getString(R.string.testFail_err) + "error: $err")
             }
         })
@@ -313,17 +246,14 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
         return if (d < 100) String.format(l, "%.1f", d) else "" + d.roundToInt()
     }
 
-    @Throws(Exception::class)
-    private fun readFileFromAssets(name: String): String? {
-        val b = BufferedReader(InputStreamReader(activity?.assets?.open(name)))
-        var ret: String? = ""
-        try {
-            while (true) {
-                val s = b.readLine() ?: break
-                ret += s
-            }
-        } catch (e: EOFException) {
-        }
-        return ret
+    private companion object {
+        private val server = TestPoint(
+            "Bari, Italy (GARR)",
+            "https://st-be-ba1.infra.garr.it",
+            "garbage.php",
+            "empty.php",
+            "empty.php",
+            "getIP.php"
+        )
     }
 }

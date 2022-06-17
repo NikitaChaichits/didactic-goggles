@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -26,7 +27,6 @@ import com.example.vpn.data.vpn.util.CheckInternetConnection
 import com.example.vpn.databinding.FragmentMainBinding
 import com.example.vpn.domain.model.Country
 import com.example.vpn.ui.main.Status.*
-import com.example.vpn.ui.connection.alert.adapter.IssuesResultAdapter
 import com.example.vpn.ui.main.adapter.BottomSheetAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
@@ -76,7 +76,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             if (vpnStart) {
                 confirmDisconnect()
             } else {
-                viewModel.setStatus(CONNECTING.value)
+                viewModel.setStatus(CONNECTING.name)
                 prepareVpn()
             }
         }
@@ -103,7 +103,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.status.collect { status ->
                 when (status) {
-                    CONNECT.value -> {
+                    CONNECT.name -> {
                         binding.btnStartStop.isEnabled = true
                         binding.ivSettings.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
@@ -111,7 +111,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                             resources.getColor(R.color.appBackground))
                         binding.tvStatus.text = resources.getString(R.string.fr_main_press_to_connect)
                     }
-                    CONNECTING.value -> {
+                    CONNECTING.name -> {
                         binding.btnStartStop.isEnabled = true
                         binding.ivSettings.isEnabled = false
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
@@ -119,7 +119,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                             resources.getColor(R.color.appBackground))
                         binding.tvStatus.text  = resources.getString(R.string.fr_main_connecting)
                     }
-                    CONNECTED.value -> {
+                    CONNECTED.name -> {
                         binding.btnStartStop.isEnabled = true
                         binding.ivSettings.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
@@ -127,7 +127,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                             resources.getColor(R.color.shareButton_background))
                         binding.tvStatus.text = resources.getString(R.string.fr_main_press_to_disconnect)
                     }
-                    RECONNECTING.value -> {
+                    RECONNECTING.name -> {
                         binding.btnStartStop.isEnabled = false
                         binding.ivSettings.isEnabled = false
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
@@ -135,10 +135,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                             resources.getColor(R.color.appBackground))
                         binding.tvStatus.text  = resources.getString(R.string.fr_main_reconnecting)
                     }
-                    TRY_DIFFERENT_SERVER.value -> {}
-                    LOADING.value -> {}
-                    INVALID_DEVICE.value -> {}
-                    AUTHENTICATION_CHECK.value -> {}
                 }
             }
         }
@@ -168,9 +164,22 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         behavior.isHideable = false
 
+        val density = requireContext().resources.displayMetrics.density
+        behavior.peekHeight = (112 * density).toInt()
+
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
-            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                var state = ""
+
+                when(newState){
+                    1 -> state = "STATE_DRAGGING"
+                    2 -> state = "STATE_SETTLING"
+                    3 -> state = "STATE_EXPANDED"
+                    4 -> state = "STATE_COLLAPSED"
+                }
+                Log.e("TAG", "newState = $state")
+            }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 with(binding) {
@@ -179,7 +188,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                         layoutExpanded.alpha = slideOffset * slideOffset
 
                         if (slideOffset > 0.5) {
-                            layoutCollapsed.visibility = View.GONE
+                            layoutCollapsed.visibility = View.INVISIBLE
                             layoutExpanded.visibility = View.VISIBLE
                         }
 
@@ -223,7 +232,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         try {
             if (vpnStart){
                 stopVpn()
-                viewModel.setStatus(RECONNECTING.value)
+                viewModel.setStatus(RECONNECTING.name)
                 startVpn()
             }
         }catch (e: Exception){
@@ -306,11 +315,11 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         } catch (e: IOException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
-            viewModel.setStatus(CONNECT.value)
+            viewModel.setStatus(CONNECT.name)
         } catch (e: RemoteException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
-            viewModel.setStatus(CONNECT.value)
+            viewModel.setStatus(CONNECT.name)
         }
     }
 
@@ -321,6 +330,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 setStatus(intent.getStringExtra("state"))
+                Log.e("MainFragment", "State = ${intent.getStringExtra("state")}")
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
@@ -336,6 +346,10 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 Log.d("Main Fragment",
                     "duration = $duration, lastPacketReceive = $lastPacketReceive, " +
                             "byteIn = $byteIn, byteOut = $byteOut")
+
+                if (duration != "00:00:00"){
+                    viewModel.setStatus(CONNECTED.name)
+                }
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
@@ -349,19 +363,15 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     fun setStatus(connectionState: String?) {
         if (connectionState != null) when (connectionState) {
             "DISCONNECTED" -> {
-                //TODO handle this status
-                viewModel.setStatus(CONNECT.value)
+                if (viewModel.status.value != RECONNECTING.name)
+                    viewModel.setStatus(CONNECT.name)
                 viewModel.setVpnStart(false)
                 OpenVPNService.setDefaultStatus()
             }
             "CONNECTED" -> {
-                viewModel.setStatus(CONNECTED.value)
+                viewModel.setStatus(CONNECTED.name)
                 viewModel.setVpnStart(true) // it will use after restart this activity
             }
-//            "WAIT" -> binding.tvStatus.text = "waiting for server connection!!"
-//            "AUTH" -> binding.tvStatus.text = "server authenticating!!"
-//            "RECONNECTING" -> binding.tvStatus.text = "Reconnecting..."
-//            "NONETWORK" -> binding.tvStatus.text = "No network connection"
         }
     }
 
@@ -393,7 +403,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     private fun stopVpn(): Boolean {
         try {
             OpenVPNThread.stop()
-            viewModel.setStatus(CONNECT.value)
+            viewModel.setStatus(CONNECT.name)
             viewModel.setVpnStart(false)
             return true
         } catch (e: Exception) {
@@ -427,6 +437,10 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     }
 
     override fun onResume() {
+        // TODO check connection
+        if (viewModel.status.value == CONNECTED.name){
+
+        }
         LocalBroadcastManager.getInstance(requireActivity())
             .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))
         super.onResume()

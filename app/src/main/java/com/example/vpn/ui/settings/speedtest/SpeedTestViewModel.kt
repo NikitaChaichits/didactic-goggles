@@ -10,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SpeedTestViewModel @Inject constructor() : BaseViewModel() {
 
-    private val _state = MutableStateFlow(INITIAL.value)
+    private val _state = MutableStateFlow(INITIAL.name)
     val state : StateFlow<String> = _state
 
 

@@ -61,11 +61,17 @@ class MainFragmentViewModel @Inject constructor(
                         list.forEach{
                             if (chosenCountryName == it.info.country){
                                 val chosenCountry = it.mapToCountry().copy(isChosen = true)
-                                countryList.add(chosenCountry)
+                                if (it.info.country == "US")
+                                    countryList.add(0, chosenCountry)
+                                else
+                                    countryList.add(chosenCountry)
                                 getServerConfig(it.ip)
                                 _country.value = chosenCountry.fullName
                             }else{
-                                countryList.add(it.mapToCountry())
+                                if (it.info.country == "US")
+                                    countryList.add(0, it.mapToCountry())
+                                else
+                                    countryList.add(it.mapToCountry())
                             }
                         }
                         _countryList.emit(countryList)

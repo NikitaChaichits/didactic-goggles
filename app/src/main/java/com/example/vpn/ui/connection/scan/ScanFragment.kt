@@ -12,15 +12,18 @@ import com.example.vpn.common.base.BaseFragment
 import com.example.vpn.databinding.FragmentScanBinding
 import com.example.vpn.ui.connection.AdActivityViewModel
 import com.example.vpn.ui.connection.State.*
+import com.natasa.progressviews.CircleProgressBar
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
+private const val SEARCH_DELAY = 60L
 
 class ScanFragment : BaseFragment(R.layout.fragment_scan) {
 
     override val viewModel by activityViewModels<AdActivityViewModel>()
 
     private lateinit var binding : FragmentScanBinding
+    private lateinit var circleProgressBar: CircleProgressBar
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,18 +37,23 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        circleProgressBar = binding.pbScanning
+        circleProgressBar.setStartPositionInDegrees(-90)
+        circleProgressBar.setRoundEdgeProgress(true)
+
         observeViewModels()
     }
 
     private fun observeViewModels() {
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenResumed {
             viewModel.state.collect { state ->
                 when (state) {
                     SCANNING.name -> {
                         binding.tvTitleBold.setText(R.string.fr_scan_scanning_for)
-
+                        circleProgressBar.setProgress(0f)
                         for (i in 0..100){
-                            delay(30)
+                            delay(SEARCH_DELAY)
+                            circleProgressBar.setProgress(i.toFloat())
                             binding.tvProgress.text = "$i %"
                         }
 
@@ -54,8 +62,10 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan) {
                     REMOVING.name -> {
                         binding.tvTitleBold.setText(R.string.fr_scan_removing)
 
+                        circleProgressBar.setProgress(0f)
                         for (i in 0..100){
-                            delay(30)
+                            delay(SEARCH_DELAY)
+                            circleProgressBar.setProgress(i.toFloat())
                             binding.tvProgress.text = "$i %"
                         }
 
@@ -72,5 +82,4 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan) {
             }
         }
     }
-
 }

@@ -28,11 +28,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.connection.AdActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/BaseAppTheme.Light"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="checkconnect"
+                    android:host="vpn"/>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name="de.blinkt.openvpn.DisconnectVPNActivity"
             android:excludeFromRecents="true"

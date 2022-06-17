@@ -116,6 +116,7 @@
     <string name="fr_speed_test_ping">Ping</string>
     <string name="fr_speed_test_mbps">mbps</string>
     <string name="fr_speed_test_ms">ms</string>
+    <string name="fr_speed_test_initialization">Initialization</string>
 
     <!-- Activity Ad -->
     <!-- Fragment Alert -->
@@ -133,6 +134,7 @@
     <string name="fr_alert_founded_issues_text">• Your Personal data could be leaked on public networks • Your browser history may be known by your internet provider • Your Location may be known to site owners/hosters</string>
     <string name="fr_alert_scan_required">Scan Required</string>
     <string name="fr_alert_connection_is_not_secured_enough">Your connection is not secured enough!</string>
+    <string name="fr_alert_error">Error!</string>
 
     <!-- Fragment Scan -->
     <string name="fr_scan_scanning_for">Scanning for</string>
@@ -140,5 +142,6 @@
     <string name="fr_scan_connection_issues">connection issues…</string>
     <string name="fr_alert_first_item">Your connection is automatically protected when this app is installed</string>
     <string name="fr_alert_second_item">Do not delete /App-Name/ to prevent connection issues in future</string>
+
 
 </resources>

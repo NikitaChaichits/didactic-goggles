@@ -23,16 +23,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivBackgroundOff"
         app:srcCompat="@drawable/ic_result_bg" />
 
-    <TextView
-        android:id="@+id/tvServerName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_offset_xl"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ivBackgroundResult" />
-
     <LinearLayout
         android:id="@+id/llInitial"
         android:layout_width="wrap_content"
@@ -57,38 +47,10 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/common_offset_m"
             android:layout_weight="1"
-            android:text="Selecting server"
+            android:text="@string/fr_speed_test_initialization"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/llSelect"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.8">
-
-        <TextView
-            android:id="@+id/tvSelect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Select a server"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/spSelectServer"
-            android:layout_marginTop="@dimen/common_offset_m"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
     </LinearLayout>
 
     <com.natasa.progressviews.CircleProgressBar
