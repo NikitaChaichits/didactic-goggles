@@ -13,7 +13,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -103,7 +102,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             btnStartStop.setOnClickListener {
                 if (behavior.state == BottomSheetBehavior.STATE_EXPANDED)
                     behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
                 if (vpnStart) {
                     confirmDisconnect()
                 } else {
@@ -130,36 +128,36 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.status.collect { status ->
                 when (status) {
-                    CONNECT.name -> {
+                    NO_CONNECT.name -> {
                         binding.btnStartStop.isEnabled = true
                         binding.ivSettings.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
                         binding.btnStartStop.setColorFilter(
-                            resources.getColor(R.color.appBackground))
-                        binding.tvStatus.text = resources.getString(R.string.fr_main_press_to_connect)
-
+                            resources.getColor(R.color.appBackground)
+                        )
+                        binding.tvStatus.text =
+                            resources.getString(R.string.fr_main_press_to_connect)
                         binding.avConnectionOn.invisible()
                         binding.avNoConnection.visible()
                     }
                     CONNECTING.name -> {
                         binding.btnStartStop.isEnabled = true
                         binding.ivSettings.isEnabled = false
-                        binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
+                        binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
                         binding.btnStartStop.setColorFilter(
-                            resources.getColor(R.color.appBackground))
-                        binding.tvStatus.text  = resources.getString(R.string.fr_main_connecting)
-
-                        binding.avConnectionOn.invisible()
-                        binding.avNoConnection.visible()
+                            resources.getColor(R.color.appBackground)
+                        )
+                        binding.tvStatus.text = resources.getString(R.string.fr_main_connecting)
                     }
                     CONNECTED.name -> {
                         binding.btnStartStop.isEnabled = true
                         binding.ivSettings.isEnabled = true
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
                         binding.btnStartStop.setColorFilter(
-                            resources.getColor(R.color.shareButton_background))
-                        binding.tvStatus.text = resources.getString(R.string.fr_main_press_to_disconnect)
-
+                            resources.getColor(R.color.shareButton_background)
+                        )
+                        binding.tvStatus.text =
+                            resources.getString(R.string.fr_main_press_to_disconnect)
                         binding.avConnectionOn.visible()
                         binding.avNoConnection.invisible()
                     }
@@ -168,13 +166,16 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                         binding.ivSettings.isEnabled = false
                         binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
                         binding.btnStartStop.setColorFilter(
-                            resources.getColor(R.color.appBackground))
-                        binding.tvStatus.text  = resources.getString(R.string.fr_main_reconnecting)
-
-                        binding.avConnectionOn.invisible()
-                        binding.avNoConnection.visible()
+                            resources.getColor(R.color.appBackground)
+                        )
+                        binding.tvStatus.text = resources.getString(R.string.fr_main_reconnecting)
                     }
                 }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.vpnStart.collect {
+                vpnStart = it
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -204,7 +205,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 var state = ""
 
-                when(newState){
+                when (newState) {
                     1 -> state = "STATE_DRAGGING"
                     2 -> state = "STATE_SETTLING"
                     3 -> state = "STATE_EXPANDED"
@@ -248,7 +249,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
     private fun setCountry(countryList: List<Country>, countryName: String) {
         val country = countryList.find { it.shortName == countryName }
-
         setSingleItem(country)
     }
 
@@ -345,11 +345,11 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         } catch (e: IOException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
-            viewModel.setStatus(CONNECT.name)
+            viewModel.setStatus(NO_CONNECT.name)
         } catch (e: RemoteException) {
             e.printStackTrace()
             showToast("Error! ${e.message}")
-            viewModel.setStatus(CONNECT.name)
+            viewModel.setStatus(NO_CONNECT.name)
         }
     }
 
@@ -381,7 +381,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     private fun stopVpn(): Boolean {
         try {
             OpenVPNThread.stop()
-            viewModel.setStatus(CONNECT.name)
+            viewModel.setStatus(NO_CONNECT.name)
             viewModel.setVpnStart(false)
             return true
         } catch (e: Exception) {
@@ -398,7 +398,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         if (connectionState != null) when (connectionState) {
             "DISCONNECTED" -> {
                 if (viewModel.status.value != RECONNECTING.name)
-                    viewModel.setStatus(CONNECT.name)
+                    viewModel.setStatus(NO_CONNECT.name)
                 viewModel.setVpnStart(false)
                 OpenVPNService.setDefaultStatus()
             }
@@ -433,7 +433,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                     "duration = $duration, lastPacketReceive = $lastPacketReceive, " +
                             "byteIn = $byteIn, byteOut = $byteOut"
                 )
-                if (duration != "00:00:00"){
+                if (duration != "00:00:00") {
                     viewModel.setStatus(CONNECTED.name)
                 }
             } catch (e: java.lang.Exception) {

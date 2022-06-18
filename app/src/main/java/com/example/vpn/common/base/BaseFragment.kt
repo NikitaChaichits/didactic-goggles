@@ -15,7 +15,10 @@ import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.vpn.util.flow.collectWhileStarted
 import com.example.vpn.util.permission.checkPermission
-import com.example.vpn.util.view.*
+import com.example.vpn.util.view.buildLoadingDialog
+import com.example.vpn.util.view.dialogBuilder
+import com.example.vpn.util.view.hideKeyboard
+import com.example.vpn.util.view.toast
 
 abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
 

@@ -128,7 +128,7 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
     private fun initScreen() {
         object : Thread() {
             override fun run() {
-                activity?.runOnUiThread{ viewModel.setState(INITIAL.name) }
+                activity?.runOnUiThread { viewModel.setState(INITIAL.name) }
 
                 val servers: Array<TestPoint> = arrayOf(server)
 
@@ -145,17 +145,19 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
                 } catch (e: Throwable) {
                     System.err.println(e)
                     st = null
-                    activity?.runOnUiThread{ viewModel.setState(ERROR.name) }
+                    activity?.runOnUiThread { viewModel.setState(ERROR.name) }
 
-                    Log.e("SpeedTestFragment",
-                        "${getString(R.string.initFail_configError)} + \": \" + ${e.message}")
+                    Log.e(
+                        "SpeedTestFragment",
+                        "${getString(R.string.initFail_configError)} + \": \" + ${e.message}"
+                    )
 
                     return
                 }
                 st?.selectServer(object : ServerSelectedHandler() {
                     override fun onServerSelected(server: TestPoint?) {
                         if (server == null) {
-                            activity?.runOnUiThread{ viewModel.setState(ERROR.name) }
+                            activity?.runOnUiThread { viewModel.setState(ERROR.name) }
                             Log.e("SpeedTestFragment", getString(R.string.initFail_noServers))
                         } else {
                             selectServerScreen()
@@ -180,12 +182,12 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
     }
 
     private fun calculationScreen() {
-        activity?.runOnUiThread{ viewModel.setState(CALCULATING.name) }
+        activity?.runOnUiThread { viewModel.setState(CALCULATING.name) }
         st?.setSelectedServer(server)
 
         binding.ivStop.setOnClickListener {
             st?.abort()
-            activity?.runOnUiThread{ viewModel.setState(ERROR.name) }
+            activity?.runOnUiThread { viewModel.setState(ERROR.name) }
         }
 
         val circleProgressBar = binding.pbCalculating
@@ -197,8 +199,8 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
             @SuppressLint("SetTextI18n")
             override fun onPingJitterUpdate(ping: Double, jitter: Double, progress: Double) {
                 activity?.runOnUiThread(Runnable {
-                    circleProgressBar.setProgress((100 * progress).toFloat()/5)
-                    if(progress == 1.0){
+                    circleProgressBar.setProgress((100 * progress).toFloat() / 5)
+                    if (progress == 1.0) {
                         binding.tvPingValue.text =
                             "${format(ping)} ${resources.getString(R.string.fr_speed_test_ms)}"
                     }
@@ -208,8 +210,8 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
             @SuppressLint("SetTextI18n")
             override fun onDownloadUpdate(dl: Double, progress: Double) {
                 activity?.runOnUiThread(Runnable {
-                    circleProgressBar.setProgress(20f + (100 * progress).toFloat()/2.5f)
-                    if(progress == 1.0){
+                    circleProgressBar.setProgress(20f + (100 * progress).toFloat() / 2.5f)
+                    if (progress == 1.0) {
                         binding.tvDownloadValue.text =
                             "${format(dl)} ${resources.getString(R.string.fr_speed_test_mbps)}"
                     }
@@ -219,11 +221,11 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
             @SuppressLint("SetTextI18n")
             override fun onUploadUpdate(ul: Double, progress: Double) {
                 activity?.runOnUiThread {
-                    circleProgressBar.setProgress(60f + (100 * progress).toFloat()/2.5f)
-                    if (progress == 1.0){
+                    circleProgressBar.setProgress(60f + (100 * progress).toFloat() / 2.5f)
+                    if (progress == 1.0) {
                         binding.tvUploadValue.text =
                             "${format(ul)} ${resources.getString(R.string.fr_speed_test_mbps)}"
-                        activity?.runOnUiThread{ viewModel.setState(DONE.name) }
+                        activity?.runOnUiThread { viewModel.setState(DONE.name) }
 
                     }
                 }
@@ -234,7 +236,7 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
             override fun onEnd() {}
 
             override fun onCriticalFailure(err: String) {
-                activity?.runOnUiThread{ viewModel.setState(ERROR.name) }
+                activity?.runOnUiThread { viewModel.setState(ERROR.name) }
                 Log.e("SpeedTestFragment", getString(R.string.testFail_err) + "error: $err")
             }
         })

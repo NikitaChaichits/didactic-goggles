@@ -2,7 +2,7 @@
 
     <!-- Common strings -->
 
-    <string name="app_name">App name</string>
+    <string name="app_name_vpn">CyberSelf</string>
     <string name="tap_to_exit">Press Back again to exit.</string>
     <string name="cancel">Cancel</string>
 

@@ -86,7 +86,7 @@
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/common_offset_xs"
+        android:layout_marginHorizontal="@dimen/common_offset_xs"
         android:background="@drawable/bottom_sheet_background"
         app:behavior_peekHeight="112dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -107,7 +107,8 @@
                 android:gravity="start|center_vertical"
                 android:text="@string/fr_bottom_title"
                 android:textColor="#8E8E93"
-                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textSize="@dimen/common_textSize_m"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -125,7 +126,7 @@
                 android:id="@+id/singleItem"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="16dp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -133,14 +134,12 @@
 
                 <include
                     android:id="@+id/include"
-                    layout="@layout/country_item"
+                    layout="@layout/item_country"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
             </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <LinearLayout
             android:id="@+id/layoutExpanded"
@@ -191,7 +190,7 @@
                 android:id="@+id/rvCountries"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/country_item" />
+                tools:listitem="@layout/item_country" />
 
         </LinearLayout>
 

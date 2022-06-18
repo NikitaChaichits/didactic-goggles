@@ -1,7 +1,7 @@
 package com.example.vpn.ui.main
 
 enum class Status {
-    CONNECT,
+    NO_CONNECT,
     CONNECTING,
     CONNECTED,
     RECONNECTING

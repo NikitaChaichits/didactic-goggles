@@ -6,9 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vpn.databinding.CountryItemBinding
+import com.example.vpn.databinding.ItemCountryBinding
 import com.example.vpn.domain.model.Country
-import com.example.vpn.ui.connection.alert.adapter.IssuesResultAdapter
 
 class BottomSheetAdapter(
     private val chooseCountry: (itemPosition: Int) -> Unit
@@ -16,7 +15,7 @@ class BottomSheetAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val itemCountryBinding = CountryItemBinding.inflate(layoutInflater, parent, false)
+        val itemCountryBinding = ItemCountryBinding.inflate(layoutInflater, parent, false)
         return ItemViewHolder(itemCountryBinding)
     }
 
@@ -24,7 +23,8 @@ class BottomSheetAdapter(
         holder.bind(getItem(position), position)
     }
 
-    inner class ItemViewHolder(private val binding: CountryItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ItemViewHolder(private val binding: ItemCountryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Country, position: Int) = with(itemView) {
             binding.tvCountry.text = item.fullName
             binding.ivFlag.setImageResource(item.flag)
@@ -43,7 +43,10 @@ class BottomSheetAdapter(
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Country>() {
-        override fun areItemsTheSame(oldItem: Country, newItem: Country): Boolean = oldItem.shortName == newItem.shortName
-        override fun areContentsTheSame(oldItem: Country, newItem: Country): Boolean = oldItem == newItem
+        override fun areItemsTheSame(oldItem: Country, newItem: Country): Boolean =
+            oldItem.shortName == newItem.shortName
+
+        override fun areContentsTheSame(oldItem: Country, newItem: Country): Boolean =
+            oldItem == newItem
     }
 }

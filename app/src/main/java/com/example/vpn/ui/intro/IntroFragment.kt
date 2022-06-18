@@ -23,16 +23,16 @@ class IntroFragment : BaseFragment(R.layout.fragment_intro) {
         initObservers()
     }
 
-    private fun initListeners(){
+    private fun initListeners() {
         binding.btnContinue.setOnClickListener { viewModel.onBtnContinueClick() }
     }
 
-    private fun initObservers(){
+    private fun initObservers() {
         viewModel.run {
-            goToNextScreen.liveData.observe(viewLifecycleOwner){
+            goToNextScreen.liveData.observe(viewLifecycleOwner) {
                 findNavController().navigate(R.id.action_intro_fragment_to_subscription_fragment)
             }
-            showSecondIntroScreen.liveData.observe(viewLifecycleOwner){
+            showSecondIntroScreen.liveData.observe(viewLifecycleOwner) {
                 binding.groupFirstIntro.invisible()
                 binding.groupSecondIntro.visible()
             }

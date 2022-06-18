@@ -3,9 +3,9 @@
     android:height="80dp"
     android:viewportWidth="80"
     android:viewportHeight="80">
-  <path
-      android:pathData="M40,2L40,2A38,38 0,0 1,78 40L78,40A38,38 0,0 1,40 78L40,78A38,38 0,0 1,2 40L2,40A38,38 0,0 1,40 2z"
-      android:strokeWidth="4"
-      android:fillColor="#00000000"
-      android:strokeColor="#ffffff"/>
+    <path
+        android:pathData="M40,2L40,2A38,38 0,0 1,78 40L78,40A38,38 0,0 1,40 78L40,78A38,38 0,0 1,2 40L2,40A38,38 0,0 1,40 2z"
+        android:strokeWidth="4"
+        android:fillColor="#00000000"
+        android:strokeColor="#ffffff" />
 </vector>

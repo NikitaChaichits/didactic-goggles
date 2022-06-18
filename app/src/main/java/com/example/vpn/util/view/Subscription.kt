@@ -7,11 +7,11 @@ import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.withStyledAttributes
 import com.example.vpn.R
-import com.example.vpn.databinding.CustomSubscriptionItemBinding
+import com.example.vpn.databinding.ItemSubscriptionBinding
 
 class Subscription : LinearLayout {
 
-    private val binding = CustomSubscriptionItemBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = ItemSubscriptionBinding.inflate(LayoutInflater.from(context), this)
 
     constructor(context: Context) : super(context) {
         initView()

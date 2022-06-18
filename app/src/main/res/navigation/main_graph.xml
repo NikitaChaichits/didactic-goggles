@@ -58,7 +58,7 @@
         <argument
             android:name="isThreeTypesSubscription"
             app:argType="boolean"
-            android:defaultValue="false"/>
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
@@ -73,10 +73,10 @@
             app:destination="@id/speed_test_fragment" />
         <action
             android:id="@+id/action_settings_fragment_to_subscription_fragment"
-            app:destination="@id/subscription_fragment" >
+            app:destination="@id/subscription_fragment">
             <argument
                 android:name="isThreeTypesSubscription"
-                app:argType="boolean"/>
+                app:argType="boolean" />
         </action>
     </fragment>
 

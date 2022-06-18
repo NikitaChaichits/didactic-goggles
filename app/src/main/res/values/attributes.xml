@@ -3,13 +3,13 @@
 
     <declare-styleable name="Subscription">
         <attr name="name" format="string" />
-        <attr name="description" format="string"/>
+        <attr name="description" format="string" />
         <attr name="isChecked" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="SettingsItem">
         <attr name="icon" format="reference" />
-        <attr name="text" format="string"/>
+        <attr name="text" format="string" />
     </declare-styleable>
 
 </resources>

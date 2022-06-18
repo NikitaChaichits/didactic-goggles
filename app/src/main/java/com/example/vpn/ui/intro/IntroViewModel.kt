@@ -12,8 +12,8 @@ class IntroViewModel @Inject constructor() : BaseViewModel() {
     val goToNextScreen = Event<Unit>()
     val showSecondIntroScreen = Event<Unit>()
 
-    fun onBtnContinueClick(){
-        if (isFirstClick){
+    fun onBtnContinueClick() {
+        if (isFirstClick) {
             showSecondIntroScreen.call()
             isFirstClick = false
         } else {

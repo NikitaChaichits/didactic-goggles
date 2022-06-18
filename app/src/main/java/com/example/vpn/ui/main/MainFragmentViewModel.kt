@@ -33,33 +33,33 @@ class MainFragmentViewModel @Inject constructor(
     val vpnStart: StateFlow<Boolean> = _vpnStart.asStateFlow()
 
     private val _status = MutableStateFlow("")
-    val status : StateFlow<String> = _status.asStateFlow()
+    val status: StateFlow<String> = _status.asStateFlow()
 
 
     fun setNewCountryList(selectedItem: Country) {
         val newList = mutableListOf<Country>()
-            _countryList.value.forEach{
-                if (it.shortName == selectedItem.shortName){
-                    newList.add(it.copy(isChosen = true))
-                    getServerConfig(it.ip)
-                } else {
-                    newList.add(it.copy(isChosen = false))
-                }
+        _countryList.value.forEach {
+            if (it.shortName == selectedItem.shortName) {
+                newList.add(it.copy(isChosen = true))
+                getServerConfig(it.ip)
+            } else {
+                newList.add(it.copy(isChosen = false))
             }
+        }
 
         _countryList.value = newList
         _country.value = selectedItem.fullName
     }
 
     fun getListFromApi(chosenCountryName: String) {
-        viewModelScope.launch(Dispatchers.IO)  {
+        viewModelScope.launch(Dispatchers.IO) {
             useCase.getServersList()
                 .onSuccess { list ->
                     Log.d("MainFragmentViewModel", "Response = $list")
                     try {
                         val countryList = mutableListOf<Country>()
-                        list.forEach{
-                            if (chosenCountryName == it.info.country){
+                        list.forEach {
+                            if (chosenCountryName == it.info.country) {
                                 val chosenCountry = it.mapToCountry().copy(isChosen = true)
                                 if (it.info.country == "US")
                                     countryList.add(0, chosenCountry)
@@ -67,7 +67,7 @@ class MainFragmentViewModel @Inject constructor(
                                     countryList.add(chosenCountry)
                                 getServerConfig(it.ip)
                                 _country.value = chosenCountry.fullName
-                            }else{
+                            } else {
                                 if (it.info.country == "US")
                                     countryList.add(0, it.mapToCountry())
                                 else
@@ -75,7 +75,7 @@ class MainFragmentViewModel @Inject constructor(
                             }
                         }
                         _countryList.emit(countryList)
-                    }catch (e: Exception){
+                    } catch (e: Exception) {
                         Log.e("MainFragmentViewModel", "exception = $e")
                     }
                 }
@@ -87,7 +87,7 @@ class MainFragmentViewModel @Inject constructor(
     }
 
     private fun getServerConfig(serverIp: String) {
-         viewModelScope.launch(Dispatchers.IO)  {
+        viewModelScope.launch(Dispatchers.IO) {
             useCase.getServerConfig(serverIp)
                 .onSuccess { configResponse ->
                     _serverConfig.value = configResponse.body() ?: ""
@@ -99,7 +99,7 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
-    fun setVpnStart(isStart: Boolean){
+    fun setVpnStart(isStart: Boolean) {
         _vpnStart.value = isStart
     }
 

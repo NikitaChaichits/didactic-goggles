@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.withStyledAttributes
 import com.example.vpn.R
-import com.example.vpn.databinding.SettingsItemBinding
+import com.example.vpn.databinding.ItemSettingsBinding
 
 class SettingsItem : LinearLayout {
 
-    private val binding = SettingsItemBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = ItemSettingsBinding.inflate(LayoutInflater.from(context), this)
 
     constructor(context: Context) : super(context)
 

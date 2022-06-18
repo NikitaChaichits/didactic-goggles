@@ -7,14 +7,14 @@
     android:layout_marginBottom="@dimen/common_offset_m"
     android:background="@drawable/bg_warning_connection">
 
-    <FrameLayout
+    <ImageView
         android:id="@+id/ivLeftBg"
         android:layout_width="@dimen/common_offset_m"
         android:layout_height="0dp"
-        android:background="@color/colorPrimaryLight"
+        android:background="@drawable/bg_fixed_issues"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvFixedIssues"

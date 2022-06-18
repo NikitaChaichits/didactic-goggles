@@ -3,11 +3,9 @@ package com.example.vpn.ui.splash
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.vpn.R
 import com.example.vpn.common.base.BaseFragment
 import com.example.vpn.data.source.local.SharedPreferencesDataSource
-import com.example.vpn.util.time.handleMultipleCallsWithDelay
 import com.example.vpn.util.time.handleWithDelay
 import javax.inject.Inject
 
@@ -16,7 +14,7 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
     override val viewModel: SplashViewModel by viewModels()
 
     @Inject
-    lateinit var prefs : SharedPreferencesDataSource
+    lateinit var prefs: SharedPreferencesDataSource
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

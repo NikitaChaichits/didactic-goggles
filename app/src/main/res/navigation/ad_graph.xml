@@ -9,7 +9,7 @@
         android:id="@+id/alert_fragment"
         android:name="com.example.vpn.ui.connection.alert.AlertFragment"
         android:label="fragment_alert"
-        tools:layout="@layout/fragment_alert" >
+        tools:layout="@layout/fragment_alert">
         <action
             android:id="@+id/action_alert_fragment_to_scan_fragment"
             app:destination="@id/scan_fragment" />
@@ -18,7 +18,7 @@
         android:id="@+id/scan_fragment"
         android:name="com.example.vpn.ui.connection.scan.ScanFragment"
         android:label="fragment_scan"
-        tools:layout="@layout/fragment_scan" >
+        tools:layout="@layout/fragment_scan">
         <action
             android:id="@+id/action_scan_fragment_to_alert_fragment"
             app:destination="@id/alert_fragment" />
