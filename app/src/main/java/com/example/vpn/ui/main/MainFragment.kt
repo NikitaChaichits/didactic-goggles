@@ -90,6 +90,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
     private fun initAll() {
         prefs = SharedPreferencesDataSource(requireContext())
+        if (prefs.getIsPremium()){
+            prefs.setCountryName("US")
+        }
         viewModel.getListFromApi(prefs.getCountryName())
         connection = CheckInternetConnection()
     }
@@ -180,12 +183,18 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.countryList.collect { list ->
-                countryList.clear()
-                countryList.addAll(list)
-                adapter.notifyDataSetChanged()
 
-                if (!list.isNullOrEmpty())
+                if (list.isNotEmpty()){
+                    countryList.clear()
+
+                    if (prefs.getIsPremium())
+                        countryList.addAll(list)
+                    else
+                        countryList.add(list[0])
+
                     setCountry(list, prefs.getCountryName())
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
     }
@@ -435,6 +444,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 )
                 if (duration != "00:00:00") {
                     viewModel.setStatus(CONNECTED.name)
+                    viewModel.setVpnStart(true)
                 }
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()

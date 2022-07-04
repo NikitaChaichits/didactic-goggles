@@ -95,7 +95,11 @@
         tools:layout="@layout/fragment_support">
         <action
             android:id="@+id/action_support_fragment_to_subscription_fragment"
-            app:destination="@id/subscription_fragment" />
+            app:destination="@id/subscription_fragment" >
+            <argument
+                android:name="isThreeTypesSubscription"
+                app:argType="boolean" />
+        </action>
     </fragment>
 
 

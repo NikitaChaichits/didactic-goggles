@@ -10,21 +10,38 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.vpn.BuildConfig
 import com.example.vpn.R
 import com.example.vpn.common.base.BaseFragment
+import com.example.vpn.data.source.local.SharedPreferencesDataSource
 import com.example.vpn.databinding.FragmentSupportBinding
+import com.example.vpn.ui.settings.SettingsFragmentDirections
+import javax.inject.Inject
 
 
 class SupportFragment : BaseFragment(R.layout.fragment_support) {
+
+    @Inject
+    lateinit var prefs: SharedPreferencesDataSource
 
     private val binding by viewBinding(FragmentSupportBinding::bind)
     override val viewModel: SupportFragmentViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        prefs = SharedPreferencesDataSource(view.context)
+        if (prefs.getIsPremium()){
+            binding.ivBanner.visibility = View.GONE
+        }
         initListeners()
     }
 
     private fun initListeners() {
         with(binding) {
+            ivBanner.setOnClickListener {
+                navigate(
+                    SupportFragmentDirections.actionSupportFragmentToSubscriptionFragment(
+                        true
+                    )
+                )
+            }
             btnBack.setOnClickListener { navigateBack() }
             btnConnectIssues.setOnClickListener { openEmailClient("Connection Issues") }
             btnSlowBrowsing.setOnClickListener { openEmailClient("Slow Browsing") }

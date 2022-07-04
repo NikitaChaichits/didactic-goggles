@@ -30,6 +30,7 @@ def libraryVersions = [
         viewBindingPropertyDelegate: '1.5.6',
         progressViewVersion        : '5843c69b44',
         lottieVersion              : '3.4.0',
+        billingVersion             : '5.0.0'
 ]
 
 ext {
@@ -84,6 +85,7 @@ ext {
 
             viewBindingPropertyDelegate: "com.github.kirich1409:viewbindingpropertydelegate-noreflection:${libraryVersions.viewBindingPropertyDelegate}",
             progressViewLib            : "com.github.natasam:DemoProgressViewsLibApp:${libraryVersions.progressViewVersion}",
-            lottie                     : "com.airbnb.android:lottie:${libraryVersions.lottieVersion}"
+            lottie                     : "com.airbnb.android:lottie:${libraryVersions.lottieVersion}",
+            billing                    : "com.android.billingclient:billing:${libraryVersions.billingVersion}"
     ]
 }

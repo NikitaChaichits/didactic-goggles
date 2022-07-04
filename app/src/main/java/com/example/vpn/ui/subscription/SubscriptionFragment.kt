@@ -1,20 +1,34 @@
 package com.example.vpn.ui.subscription
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.SkuDetails
 import com.example.vpn.R
 import com.example.vpn.common.base.BaseFragment
+import com.example.vpn.data.source.local.SharedPreferencesDataSource
+import com.example.vpn.domain.billing.BillingClientWrapper
 import com.example.vpn.databinding.FragmentSubscriptionBinding
 import com.example.vpn.util.view.Subscription
 import com.example.vpn.util.view.invisible
 import com.example.vpn.util.view.visible
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription) {
+@AndroidEntryPoint
+class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
+    BillingClientWrapper.OnPurchaseListener {
+
+    lateinit var prefs: SharedPreferencesDataSource
+
+    @Inject
+    lateinit var billingClientWrapper: BillingClientWrapper
 
     private val args: SubscriptionFragmentArgs by navArgs()
 
@@ -26,11 +40,45 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        prefs = SharedPreferencesDataSource(view.context)
+
         if (args.isThreeTypesSubscription)
             binding.subscriptionWeek.visible()
 
         initListeners()
         onBackPressed()
+
+        billingClientWrapper.onPurchaseListener = this
+        displayProducts()
+    }
+
+    private val purchaseButtonsMap: Map<String, Subscription> by lazy(LazyThreadSafetyMode.NONE) {
+        mapOf(
+            "premium_sub_annual" to binding.subscriptionAnnual,
+            "premium_sub_month" to binding.subscriptionMonthly,
+            "premium_sub_week" to binding.subscriptionWeek
+        )
+    }
+
+    private fun displayProducts() {
+        billingClientWrapper.queryProducts(object : BillingClientWrapper.OnQueryProductsListener {
+            override fun onSuccess(products: List<SkuDetails>) {
+                products.forEach { product ->
+                    purchaseButtonsMap[product.sku]?.apply {
+//                        text = "${product.description} for ${product.price}"
+                        setOnClickListener {
+                            billingClientWrapper.purchase(requireActivity(), product)
+                            Log.e("SubscriptionFragment", "${product.description} for ${product.price}")
+                        }
+                    }
+                }
+            }
+
+            override fun onFailure(error: BillingClientWrapper.Error) {
+                //handle error
+                Log.e("SubscriptionFragment", "Error: ${error.debugMessage}")
+            }
+        })
     }
 
     private fun onBackPressed() {
@@ -77,6 +125,24 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription) {
             visible()
             isWebViewVisible = true
         }
+    }
+
+    override fun onPurchaseSuccess(purchase: Purchase?) {
+        //handle successful purchase
+        //show premium information
+        prefs.setIsPremium(true)
+        Log.i("SubscriptionFragment", "onPurchaseSuccess!")
+    }
+
+    override fun onPurchaseFailure(error: BillingClientWrapper.Error) {
+        //handle error or user cancelation
+        Log.e("SubscriptionFragment", "Error: ${error.debugMessage}")
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+    //TODO check purchases
     }
 
 }

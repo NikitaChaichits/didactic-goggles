@@ -3,10 +3,13 @@ package com.example.vpn.ui.splash
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.vpn.R
 import com.example.vpn.common.base.BaseFragment
 import com.example.vpn.data.source.local.SharedPreferencesDataSource
 import com.example.vpn.util.time.handleWithDelay
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class SplashFragment : BaseFragment(R.layout.fragment_splash) {
@@ -19,7 +22,10 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         prefs = SharedPreferencesDataSource(view.context)
-        handleWithDelay(3000L) { checkFirstLaunch() }
+        lifecycleScope.launchWhenResumed {
+            delay(3000L)
+            checkFirstLaunch()
+        }
     }
 
     private fun checkFirstLaunch() {

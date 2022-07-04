@@ -116,6 +116,9 @@ dependencies {
 
     // Animation
     implementation appDependencies.lottie
+
+    // Billing
+    implementation appDependencies.billing
 }
 
 android.applicationVariants.all { variant ->
