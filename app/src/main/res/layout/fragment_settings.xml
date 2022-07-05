@@ -89,42 +89,42 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.example.vpn.util.view.SettingsItem
+            <com.cyberself.vpn.util.view.SettingsItem
                 android:id="@+id/btnRestorePurchase"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_purchase"
                 app:text="@string/fr_settings_restore" />
 
-            <com.example.vpn.util.view.SettingsItem
+            <com.cyberself.vpn.util.view.SettingsItem
                 android:id="@+id/btnContactSupport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_support"
                 app:text="@string/fr_settings_contact" />
 
-            <com.example.vpn.util.view.SettingsItem
+            <com.cyberself.vpn.util.view.SettingsItem
                 android:id="@+id/btnPrivacyPolicy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_privacy"
                 app:text="@string/fr_settings_privacy" />
 
-            <com.example.vpn.util.view.SettingsItem
+            <com.cyberself.vpn.util.view.SettingsItem
                 android:id="@+id/btnTerms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_terms"
                 app:text="@string/fr_settings_terms" />
 
-            <com.example.vpn.util.view.SettingsItem
+            <com.cyberself.vpn.util.view.SettingsItem
                 android:id="@+id/btnRateApp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_like"
                 app:text="@string/fr_settings_rate" />
 
-            <com.example.vpn.util.view.SettingsItem
+            <com.cyberself.vpn.util.view.SettingsItem
                 android:id="@+id/btnShare"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
