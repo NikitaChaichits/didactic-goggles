@@ -22,7 +22,7 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
     class Error(val responseCode: Int, val debugMessage: String)
 
 
-    private val billingClient = BillingClient
+    val billingClient = BillingClient
         .newBuilder(context)
         .enablePendingPurchases()
         .setListener(this)

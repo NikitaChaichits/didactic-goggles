@@ -119,6 +119,8 @@ dependencies {
 
     // Billing
     implementation appDependencies.billing
+    implementation appDependencies.billingKtx
+
 }
 
 android.applicationVariants.all { variant ->

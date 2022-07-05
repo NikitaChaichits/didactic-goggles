@@ -86,6 +86,7 @@ ext {
             viewBindingPropertyDelegate: "com.github.kirich1409:viewbindingpropertydelegate-noreflection:${libraryVersions.viewBindingPropertyDelegate}",
             progressViewLib            : "com.github.natasam:DemoProgressViewsLibApp:${libraryVersions.progressViewVersion}",
             lottie                     : "com.airbnb.android:lottie:${libraryVersions.lottieVersion}",
-            billing                    : "com.android.billingclient:billing:${libraryVersions.billingVersion}"
+            billing                    : "com.android.billingclient:billing:${libraryVersions.billingVersion}",
+            billingKtx                 : "com.android.billingclient:billing-ktx:${libraryVersions.billingVersion}"
     ]
 }

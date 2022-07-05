@@ -8,7 +8,6 @@ import com.cyberself.vpn.R
 import com.cyberself.vpn.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class AdActivity : AppCompatActivity(R.layout.activity_ad){
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {

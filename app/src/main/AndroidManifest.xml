@@ -40,7 +40,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
+                <!--TODO handle deeplink-->
                 <data android:scheme="checkconnect"
                     android:host="vpn"/>
             </intent-filter>

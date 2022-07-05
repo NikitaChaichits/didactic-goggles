@@ -146,7 +146,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                     CONNECTING.name -> {
                         binding.btnStartStop.isEnabled = true
                         binding.ivSettings.isEnabled = false
-                        binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_start)
+                        binding.tvBtnName.text = resources.getString(R.string.fr_main_btn_stop)
                         binding.btnStartStop.setColorFilter(
                             resources.getColor(R.color.appBackground)
                         )
@@ -204,6 +204,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         behavior = BottomSheetBehavior.from(binding.bottomSheet)
 
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        if (!prefs.getIsPremium()){
+            behavior.isDraggable = false
+        }
         behavior.isHideable = false
 
         val density = requireContext().resources.displayMetrics.density
