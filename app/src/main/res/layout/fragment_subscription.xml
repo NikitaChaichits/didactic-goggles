@@ -69,7 +69,7 @@
         app:layout_constraintBottom_toTopOf="@id/tvCancel"
         app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
 
-        <com.example.vpn.util.view.Subscription
+        <com.cyberself.vpn.util.view.Subscription
             android:id="@+id/subscriptionAnnual"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             app:isChecked="true"
             app:name="@string/fr_subscription_type1" />
 
-        <com.example.vpn.util.view.Subscription
+        <com.cyberself.vpn.util.view.Subscription
             android:id="@+id/subscriptionMonthly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
             app:description="@string/fr_subscription_description2"
             app:name="@string/fr_subscription_type2" />
 
-        <com.example.vpn.util.view.Subscription
+        <com.cyberself.vpn.util.view.Subscription
             android:id="@+id/subscriptionWeek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

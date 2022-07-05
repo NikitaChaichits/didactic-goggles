@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.vpn">
+    package="com.cyberself.vpn">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="com.android.vending.BILLING"/>
 
     <application
-        android:name=".App"
+        android:name="com.cyberself.vpn.App"
         android:allowBackup="true"
         android:extractNativeLibs="true"
         android:icon="@drawable/ic_launcher_vpn"
@@ -20,7 +20,7 @@
         tools:replace="android:extractNativeLibs,android:label"
         tools:targetApi="31">
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.cyberself.vpn.ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -31,7 +31,7 @@
         </activity>
 
         <activity
-            android:name=".ui.connection.AdActivity"
+            android:name="com.cyberself.vpn.ui.connection.AdActivity"
             android:exported="true"
             android:theme="@style/BaseAppTheme.Light"
             android:screenOrientation="portrait">
