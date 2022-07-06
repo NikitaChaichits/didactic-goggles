@@ -83,8 +83,6 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
             }
 
             override fun onFailure(error: BillingClientWrapper.Error) {
-                //handle error
-
                 if (error.responseCode != BillingClient.BillingResponseCode.OK
                     && error.responseCode != BillingClient.BillingResponseCode.USER_CANCELED) {
 //                    Toast.makeText(requireContext(), "Error! ${error.debugMessage}", Toast.LENGTH_LONG).show()
