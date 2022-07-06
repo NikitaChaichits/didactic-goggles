@@ -1,17 +1,17 @@
-package com.cyberself.vpn.core.worker;
+package com.cyberself.speedtest.core.worker;
 
 
-import com.cyberself.vpn.core.base.Connection;
-import com.cyberself.vpn.core.base.Utils;
-import com.cyberself.vpn.core.config.SpeedtestConfig;
-import com.cyberself.vpn.core.config.TelemetryConfig;
-import com.cyberself.vpn.core.download.DownloadStream;
-import com.cyberself.vpn.core.getIP.GetIP;
-import com.cyberself.vpn.core.log.Logger;
-import com.cyberself.vpn.core.ping.PingStream;
-import com.cyberself.vpn.core.serverSelector.TestPoint;
-import com.cyberself.vpn.core.telemetry.Telemetry;
-import com.cyberself.vpn.core.upload.UploadStream;
+import com.cyberself.speedtest.core.base.Connection;
+import com.cyberself.speedtest.core.base.Utils;
+import com.cyberself.speedtest.core.config.SpeedtestConfig;
+import com.cyberself.speedtest.core.config.TelemetryConfig;
+import com.cyberself.speedtest.core.download.DownloadStream;
+import com.cyberself.speedtest.core.getIP.GetIP;
+import com.cyberself.speedtest.core.log.Logger;
+import com.cyberself.speedtest.core.ping.PingStream;
+import com.cyberself.speedtest.core.serverSelector.TestPoint;
+import com.cyberself.speedtest.core.telemetry.Telemetry;
+import com.cyberself.speedtest.core.upload.UploadStream;
 
 import org.json.JSONObject;
 

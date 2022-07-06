@@ -42,7 +42,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
     private val binding by viewBinding(FragmentMainBinding::bind)
     override val viewModel by activityViewModels<MainFragmentViewModel>()
-    private val adapter by lazy { BottomSheetAdapter(::chooseCountry) }
+    private val adapter by lazy {
+        BottomSheetAdapter(
+            ::chooseCountry,
+            { showToast("Need to purchase subscription") },
+            prefs.getIsPremium(),
+        )
+    }
 
     private lateinit var prefs: SharedPreferencesDataSource
     private lateinit var behavior: BottomSheetBehavior<ConstraintLayout>
@@ -90,7 +96,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
     private fun initAll() {
         prefs = SharedPreferencesDataSource(requireContext())
-        if (prefs.getIsPremium()){
+        if (prefs.getIsPremium()) {
             prefs.setCountryName("US")
         }
         viewModel.getListFromApi(prefs.getCountryName())
@@ -184,13 +190,9 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.countryList.collect { list ->
 
-                if (list.isNotEmpty()){
+                if (list.isNotEmpty()) {
                     countryList.clear()
-
-                    if (prefs.getIsPremium())
-                        countryList.addAll(list)
-                    else
-                        countryList.add(list[0])
+                    countryList.addAll(list)
 
                     setCountry(list, prefs.getCountryName())
                     adapter.notifyDataSetChanged()
@@ -204,9 +206,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         behavior = BottomSheetBehavior.from(binding.bottomSheet)
 
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        if (!prefs.getIsPremium()){
-            behavior.isDraggable = false
-        }
         behavior.isHideable = false
 
         val density = requireContext().resources.displayMetrics.density
@@ -373,14 +372,8 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             requireActivity()
         )
         builder.setMessage(requireActivity().getString(R.string.connection_close_confirm))
-        builder.setPositiveButton(
-            requireActivity().getString(R.string.yes)
-        ) { dialog, id -> stopVpn() }
-        builder.setNegativeButton(
-            requireActivity().getString(R.string.no)
-        ) { dialog, id ->
-            // User cancelled the dialog
-        }
+        builder.setPositiveButton(requireActivity().getString(R.string.yes)) { _, _ -> stopVpn() }
+        builder.setNegativeButton(requireActivity().getString(R.string.no)) { _, _ -> }
 
         val dialog = builder.create()
         dialog.show()
@@ -462,10 +455,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         return connection!!.netCheck(requireContext())
     }
 
-    /**
-     * Show toast message
-     * @param message: toast message
-     */
     private fun showToast(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }

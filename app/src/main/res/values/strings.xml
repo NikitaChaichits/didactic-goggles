@@ -71,8 +71,8 @@
     <string name="fr_main_btn_stop">Stop</string>
     <string name="fr_main_press_to_connect">Press to connect</string>
     <string name="fr_main_press_to_disconnect">Press to disconnect</string>
-    <string name="fr_main_connecting">Connecting ...</string>
-    <string name="fr_main_reconnecting">Reconnecting ...</string>
+    <string name="fr_main_connecting">Connecting…</string>
+    <string name="fr_main_reconnecting">Reconnecting…</string>
 
     <string name="vpn_on">VPN ON</string>
     <string name="vpn_off">VPN OFF</string>
@@ -97,7 +97,7 @@
     <string name="fr_settings_privacy">Privacy Policy</string>
     <string name="fr_settings_terms">Terms of use</string>
     <string name="fr_settings_rate">Rate app</string>
-    <string name="fr_settings_share">Share SmartCrypt</string>
+    <string name="fr_settings_share">Share app</string>
 
     <!-- Fragment Support -->
     <string name="fr_support">Support</string>

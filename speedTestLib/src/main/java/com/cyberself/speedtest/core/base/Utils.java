@@ -1,4 +1,4 @@
-package com.cyberself.vpn.core.base;
+package com.cyberself.speedtest.core.base;
 
 import java.net.URLEncoder;
 

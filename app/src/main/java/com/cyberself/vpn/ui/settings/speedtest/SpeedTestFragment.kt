@@ -9,10 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.cyberself.vpn.R
 import com.cyberself.vpn.common.base.BaseFragment
-import com.cyberself.vpn.core.Speedtest
-import com.cyberself.vpn.core.Speedtest.ServerSelectedHandler
-import com.cyberself.vpn.core.Speedtest.SpeedtestHandler
-import com.cyberself.vpn.core.serverSelector.TestPoint
+import com.cyberself.speedtest.core.Speedtest
+import com.cyberself.speedtest.core.Speedtest.ServerSelectedHandler
+import com.cyberself.speedtest.core.Speedtest.SpeedtestHandler
+import com.cyberself.speedtest.core.serverSelector.TestPoint
 import com.cyberself.vpn.databinding.FragmentSpeedTestBinding
 import com.cyberself.vpn.ui.settings.speedtest.State.*
 import kotlinx.coroutines.launch
@@ -249,13 +249,14 @@ class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
     }
 
     private companion object {
-        private val server = TestPoint(
-            "Bari, Italy (GARR)",
-            "https://st-be-ba1.infra.garr.it",
-            "garbage.php",
-            "empty.php",
-            "empty.php",
-            "getIP.php"
-        )
+        private val server =
+            TestPoint(
+                "Bari, Italy (GARR)",
+                "https://st-be-ba1.infra.garr.it",
+                "garbage.php",
+                "empty.php",
+                "empty.php",
+                "getIP.php"
+            )
     }
 }

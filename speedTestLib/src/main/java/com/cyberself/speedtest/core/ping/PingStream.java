@@ -1,26 +1,25 @@
-package com.cyberself.vpn.core.download;
+package com.cyberself.speedtest.core.ping;
 
 
-import com.cyberself.vpn.core.base.Connection;
-import com.cyberself.vpn.core.base.Utils;
-import com.cyberself.vpn.core.config.SpeedtestConfig;
-import com.cyberself.vpn.core.log.Logger;
+import com.cyberself.speedtest.core.config.SpeedtestConfig;
+import com.cyberself.speedtest.core.log.Logger;
+import com.cyberself.speedtest.core.base.Connection;
+import com.cyberself.speedtest.core.base.Utils;
 
-public abstract class DownloadStream {
+public abstract class PingStream {
     private String server, path;
-    private int ckSize;
+    private int remainingPings=10;
     private int connectTimeout, soTimeout, recvBuffer, sendBuffer;
     private Connection c=null;
-    private Downloader downloader;
+    private Pinger pinger;
     private String errorHandlingMode= SpeedtestConfig.ONERROR_ATTEMPT_RESTART;
-    private long currentDownloaded=0, previouslyDownloaded=0;
     private boolean stopASAP=false;
     private Logger log;
 
-    public DownloadStream(String server, String path, int ckSize, String errorHandlingMode, int connectTimeout, int soTimeout, int recvBuffer, int sendBuffer, Logger log){
+    public PingStream(String server, String path, int pings, String errorHandlingMode, int connectTimeout, int soTimeout, int recvBuffer, int sendBuffer, Logger log){
         this.server=server;
         this.path=path;
-        this.ckSize=ckSize;
+        remainingPings=pings<1?1:pings;
         this.errorHandlingMode=errorHandlingMode;
         this.connectTimeout=connectTimeout;
         this.soTimeout=soTimeout;
@@ -32,41 +31,44 @@ public abstract class DownloadStream {
 
     private void init(){
         if(stopASAP) return;
+        if(c!=null){
+            try{c.close();}catch (Throwable t){}
+        }
         new Thread(){
             public void run(){
-                if(c!=null){
-                    try{c.close();}catch (Throwable t){}
-                }
-                if(downloader !=null) downloader.stopASAP();
-                currentDownloaded=0;
+                if(pinger !=null) pinger.stopASAP();
+                if(remainingPings<=0) return;
                 try {
                     c = new Connection(server, connectTimeout, soTimeout, recvBuffer, sendBuffer);
                     if(stopASAP){
                         try{c.close();}catch (Throwable t){}
                         return;
                     }
-                    downloader =new Downloader(c,path,ckSize) {
+                    pinger =new Pinger(c,path) {
                         @Override
-                        public void onProgress(long downloaded) {
-                            currentDownloaded=downloaded;
+                        public boolean onPong(long ns) {
+                            boolean r=PingStream.this.onPong(ns);
+                            if(--remainingPings<=0||!r){
+                                onDone();
+                                return false;
+                            } else return true;
                         }
 
                         @Override
                         public void onError(String err) {
-                            log("A downloader died");
+                            log("A pinger died");
                             if(errorHandlingMode.equals(SpeedtestConfig.ONERROR_FAIL)){
-                                DownloadStream.this.onError(err);
+                                PingStream.this.onError(err);
                                 return;
                             }
                             if(errorHandlingMode.equals(SpeedtestConfig.ONERROR_ATTEMPT_RESTART)||errorHandlingMode.equals(SpeedtestConfig.ONERROR_MUST_RESTART)){
-                                previouslyDownloaded+=currentDownloaded;
                                 Utils.sleep(100);
                                 init();
                             }
                         }
                     };
                 }catch (Throwable t){
-                    log("A downloader failed hard");
+                    log("A pinger failed hard");
                     try{c.close();}catch (Throwable t1){}
                     if(errorHandlingMode.equals(SpeedtestConfig.ONERROR_MUST_RESTART)){
                         Utils.sleep(100);
@@ -75,29 +77,20 @@ public abstract class DownloadStream {
                 }
             }
         }.start();
-
     }
 
     public abstract void onError(String err);
+    public abstract boolean onPong(long ns);
+    public abstract void onDone();
 
     public void stopASAP(){
         stopASAP=true;
-        if(downloader !=null) downloader.stopASAP();
-    }
-
-    public long getTotalDownloaded(){
-        return previouslyDownloaded+currentDownloaded;
-    }
-
-    public void resetDownloadCounter(){
-        previouslyDownloaded=0;
-        currentDownloaded=0;
-        if(downloader !=null) downloader.resetDownloadCounter();
+        if(pinger !=null) pinger.stopASAP();
     }
 
     public void join(){
-        while(downloader==null) Utils.sleep(0,100);
-        try{downloader.join();}catch (Throwable t){}
+        while(pinger==null) Utils.sleep(0,100);
+        try{pinger.join();}catch (Throwable t){}
     }
 
     private void log(String s){

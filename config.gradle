@@ -4,6 +4,9 @@
 
 ext {
 
+    def keysProperties = new Properties()
+    keysProperties.load(new FileInputStream(rootProject.file("keys.properties")))
+
     /**
      * Common configuration for all project
      */
@@ -31,13 +34,10 @@ ext {
             versionCode    : generateVersionCode(appVersionMajor, appVersionPatch, appVersionBuild),
             versionBuild   : appVersionBuild,
 
-//            keyAlias       : keysProperties['keyAlias'],
-//            keyPassword    : keysProperties['keyPassword'],
-//            storeFile      : file(keysProperties['storeFile']),
-//            storePassword  : keysProperties['storePassword'],
-
-            devUrl : "https://{subdomain}.conrento-dev.de",
-            prodUrl: "https://{subdomain}.production.com"
+            keyAlias       : keysProperties['keyAlias'],
+            keyPassword    : keysProperties['keyPassword'],
+            storeFile      : file(keysProperties['storeFile']),
+            storePassword  : keysProperties['storePassword'],
     ]
 }
 

@@ -1,4 +1,4 @@
-package com.cyberself.vpn.core.log;
+package com.cyberself.speedtest.core.log;
 
 public class Logger {
     private String log="";

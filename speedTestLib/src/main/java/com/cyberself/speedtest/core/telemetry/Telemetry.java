@@ -1,9 +1,9 @@
-package com.cyberself.vpn.core.telemetry;
+package com.cyberself.speedtest.core.telemetry;
 
 
-import com.cyberself.vpn.core.base.Connection;
-import com.cyberself.vpn.core.base.Utils;
-import com.cyberself.vpn.core.config.TelemetryConfig;
+import com.cyberself.speedtest.core.base.Connection;
+import com.cyberself.speedtest.core.base.Utils;
+import com.cyberself.speedtest.core.config.TelemetryConfig;
 
 import java.io.PrintStream;
 import java.util.HashMap;

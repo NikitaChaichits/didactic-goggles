@@ -30,6 +30,7 @@ data class ApiServer(
             "IN" -> R.drawable.ic_flag_india
             else -> R.drawable.ic_placeholder
         },
-        isBestChoice = info.country == "US"
+        isBestChoice = info.country == "US",
+        isActiveWithoutPremium = info.country == "US",
     )
 }

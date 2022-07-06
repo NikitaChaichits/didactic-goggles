@@ -1,7 +1,7 @@
-package com.cyberself.vpn.core.ping;
+package com.cyberself.speedtest.core.ping;
 
 
-import com.cyberself.vpn.core.base.Connection;
+import com.cyberself.speedtest.core.base.Connection;
 
 import java.io.InputStream;
 

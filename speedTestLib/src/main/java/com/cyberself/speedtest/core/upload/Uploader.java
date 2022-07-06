@@ -1,6 +1,6 @@
-package com.cyberself.vpn.core.upload;
+package com.cyberself.speedtest.core.upload;
 
-import com.cyberself.vpn.core.base.Connection;
+import com.cyberself.speedtest.core.base.Connection;
 
 import java.io.OutputStream;
 import java.util.Random;

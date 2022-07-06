@@ -22,20 +22,20 @@ android {
         buildConfigField("String", "AUTHORIZATION_KEY", authorization_key)
     }
 
-//    signingConfigs {
-//        release {
-//            keyAlias appConfig.keyAlias
-//            keyPassword appConfig.keyPassword
-//            storeFile appConfig.storeFile
-//            storePassword appConfig.storePassword
-//        }
-//    }
+    signingConfigs {
+        release {
+            keyAlias appConfig.keyAlias
+            keyPassword appConfig.keyPassword
+            storeFile appConfig.storeFile
+            storePassword appConfig.storePassword
+        }
+    }
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {

@@ -3,7 +3,7 @@ package com.cyberself.vpn.util
 import android.os.SystemClock
 import android.util.Log
 
-private const val LOG_TAG = "FahrerTopLog"
+private const val LOG_TAG = "CyberselfLog"
 
 fun log(msg: Any?) = Log.v(LOG_TAG, msg.toString())
 

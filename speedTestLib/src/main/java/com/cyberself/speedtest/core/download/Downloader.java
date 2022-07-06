@@ -1,8 +1,8 @@
-package com.cyberself.vpn.core.download;
+package com.cyberself.speedtest.core.download;
 
 
-import com.cyberself.vpn.core.base.Connection;
-import com.cyberself.vpn.core.base.Utils;
+import com.cyberself.speedtest.core.base.Connection;
+import com.cyberself.speedtest.core.base.Utils;
 
 import java.io.InputStream;
 

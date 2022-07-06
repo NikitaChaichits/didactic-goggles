@@ -1,9 +1,9 @@
-package com.cyberself.vpn.core.getIP;
+package com.cyberself.speedtest.core.getIP;
 
 
-import com.cyberself.vpn.core.base.Connection;
-import com.cyberself.vpn.core.base.Utils;
-import com.cyberself.vpn.core.config.SpeedtestConfig;
+import com.cyberself.speedtest.core.config.SpeedtestConfig;
+import com.cyberself.speedtest.core.base.Connection;
+import com.cyberself.speedtest.core.base.Utils;
 
 import java.io.BufferedReader;
 import java.util.HashMap;

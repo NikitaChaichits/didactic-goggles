@@ -1,10 +1,10 @@
-package com.cyberself.vpn.core.upload;
+package com.cyberself.speedtest.core.upload;
 
 
-import com.cyberself.vpn.core.base.Connection;
-import com.cyberself.vpn.core.base.Utils;
-import com.cyberself.vpn.core.config.SpeedtestConfig;
-import com.cyberself.vpn.core.log.Logger;
+import com.cyberself.speedtest.core.log.Logger;
+import com.cyberself.speedtest.core.base.Connection;
+import com.cyberself.speedtest.core.base.Utils;
+import com.cyberself.speedtest.core.config.SpeedtestConfig;
 
 public abstract class UploadStream {
     private String server, path;

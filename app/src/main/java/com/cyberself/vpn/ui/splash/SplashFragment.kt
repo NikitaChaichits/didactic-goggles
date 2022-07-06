@@ -13,7 +13,6 @@ import com.cyberself.vpn.data.source.local.SharedPreferencesDataSource
 import com.cyberself.vpn.domain.billing.BillingClientWrapper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,7 +32,7 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
             delay(3000L)
             checkFirstLaunch()
         }
-        checkSubs()
+        checkSubscription()
     }
 
     private fun checkFirstLaunch() {
@@ -45,7 +44,7 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
         }
     }
 
-    private fun checkSubs() {
+    private fun checkSubscription() {
         lifecycleScope.launchWhenResumed {
             billingClientWrapper.billingClient.queryPurchasesAsync(
                 QueryPurchasesParams.newBuilder()

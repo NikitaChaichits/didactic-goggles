@@ -55,4 +55,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_checked_red" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivLock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_lock_grey" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

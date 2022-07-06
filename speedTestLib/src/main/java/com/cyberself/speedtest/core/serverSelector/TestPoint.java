@@ -1,4 +1,4 @@
-package com.cyberself.vpn.core.serverSelector;
+package com.cyberself.speedtest.core.serverSelector;
 
 import org.json.JSONException;
 import org.json.JSONObject;

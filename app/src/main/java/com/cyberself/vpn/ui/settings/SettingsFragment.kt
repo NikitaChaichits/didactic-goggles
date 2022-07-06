@@ -1,6 +1,8 @@
 package com.cyberself.vpn.ui.settings
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebViewClient
@@ -11,10 +13,11 @@ import com.cyberself.vpn.R
 import com.cyberself.vpn.common.base.BaseFragment
 import com.cyberself.vpn.data.source.local.SharedPreferencesDataSource
 import com.cyberself.vpn.databinding.FragmentSettingsBinding
-import com.cyberself.vpn.ui.connection.AdActivity
+import com.cyberself.vpn.util.log
 import com.cyberself.vpn.util.view.invisible
 import com.cyberself.vpn.util.view.visible
 import javax.inject.Inject
+
 
 class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
@@ -29,7 +32,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         prefs = SharedPreferencesDataSource(view.context)
-        if (prefs.getIsPremium()){
+        if (prefs.getIsPremium()) {
             binding.ivBanner.visibility = View.GONE
         }
         initListeners()
@@ -66,8 +69,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                 navigate(R.id.action_settings_fragment_to_support_fragment)
             }
             btnRateApp.setOnClickListener {
-                val intent = Intent(requireContext(), AdActivity::class.java)
-                activity?.startActivity(intent)
+                goToPlayMarket()
             }
             btnPrivacyPolicy.setOnClickListener {
                 openWebView("https://cyberself-vpn.com/policy.html")
@@ -75,6 +77,44 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
             btnTerms.setOnClickListener {
                 openWebView("https://cyberself-vpn.com/terms.html")
             }
+            btnShare.setOnClickListener {
+                shareApp()
+            }
+        }
+    }
+
+    private fun shareApp() {
+        try {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name")
+            val shareMessage = "Let me recommend you this application\n " +
+                    "https://play.google.com/store/apps/details?id=" + activity?.packageName
+
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+            startActivity(Intent.createChooser(shareIntent, "Choose where share"))
+        } catch (e: Exception) {
+            log("Can not share app")
+        }
+    }
+
+    private fun goToPlayMarket() {
+        val uri: Uri = Uri.parse("market://details?id=" + activity?.packageName)
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+        goToMarket.addFlags(
+            Intent.FLAG_ACTIVITY_NO_HISTORY or
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+        )
+        try {
+            startActivity(goToMarket)
+        } catch (e: ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + activity?.packageName)
+                )
+            )
         }
     }
 

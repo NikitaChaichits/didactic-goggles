@@ -1,11 +1,11 @@
-package com.cyberself.vpn.core;
+package com.cyberself.speedtest.core;
 
 
-import com.cyberself.vpn.core.config.SpeedtestConfig;
-import com.cyberself.vpn.core.config.TelemetryConfig;
-import com.cyberself.vpn.core.serverSelector.ServerSelector;
-import com.cyberself.vpn.core.serverSelector.TestPoint;
-import com.cyberself.vpn.core.worker.SpeedtestWorker;
+import com.cyberself.speedtest.core.config.SpeedtestConfig;
+import com.cyberself.speedtest.core.config.TelemetryConfig;
+import com.cyberself.speedtest.core.serverSelector.ServerSelector;
+import com.cyberself.speedtest.core.serverSelector.TestPoint;
+import com.cyberself.speedtest.core.worker.SpeedtestWorker;
 
 import org.json.JSONArray;
 import org.json.JSONException;

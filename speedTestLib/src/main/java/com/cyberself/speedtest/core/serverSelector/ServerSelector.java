@@ -1,8 +1,8 @@
-package com.cyberself.vpn.core.serverSelector;
+package com.cyberself.speedtest.core.serverSelector;
 
 
-import com.cyberself.vpn.core.config.SpeedtestConfig;
-import com.cyberself.vpn.core.ping.PingStream;
+import com.cyberself.speedtest.core.config.SpeedtestConfig;
+import com.cyberself.speedtest.core.ping.PingStream;
 
 import org.json.JSONArray;
 import org.json.JSONException;
