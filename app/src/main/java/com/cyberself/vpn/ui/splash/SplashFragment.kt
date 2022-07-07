@@ -5,8 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.QueryPurchasesParams
+import com.android.billingclient.api.Purchase
 import com.cyberself.vpn.R
 import com.cyberself.vpn.common.base.BaseFragment
 import com.cyberself.vpn.data.source.local.SharedPreferencesDataSource
@@ -16,7 +15,8 @@ import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SplashFragment : BaseFragment(R.layout.fragment_splash) {
+class SplashFragment : BaseFragment(R.layout.fragment_splash),
+    BillingClientWrapper.OnQueryActivePurchasesListener {
 
     override val viewModel: SplashViewModel by viewModels()
 
@@ -45,19 +45,19 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
     }
 
     private fun checkSubscription() {
-        lifecycleScope.launchWhenResumed {
-            billingClientWrapper.billingClient.queryPurchasesAsync(
-                QueryPurchasesParams.newBuilder()
-                    .setProductType(BillingClient.ProductType.SUBS)
-                    .build()
-            ) { billingResult, purchaseList ->
-                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    prefs.setIsPremium(true)
-                } else {
-                    Log.e("SubscriptionFragment", "message = ${billingResult.debugMessage}")
-                }
-            }
+        prefs.setIsPremium(false)
+        billingClientWrapper.queryActivePurchases(this)
+    }
+
+    override fun onSuccess(activePurchases: List<Purchase>) {
+        if (activePurchases.isNotEmpty()){
+            prefs.setIsPremium(true)
         }
+        Log.d("SubscriptionFragment", "active purchases = $activePurchases")
+    }
+
+    override fun onFailure(error: BillingClientWrapper.Error) {
+        Log.e("SubscriptionFragment", "message = ${error.debugMessage}")
     }
 
 }

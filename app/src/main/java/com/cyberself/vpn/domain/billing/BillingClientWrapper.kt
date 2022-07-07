@@ -17,6 +17,11 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
         fun onPurchaseFailure(error: Error)
     }
 
+    interface OnQueryActivePurchasesListener {
+        fun onSuccess(activePurchases: List<Purchase>)
+        fun onFailure(error: Error)
+    }
+
     var onPurchaseListener: OnPurchaseListener? = null
 
     class Error(val responseCode: Int, val debugMessage: String)
@@ -133,6 +138,31 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
                     .build(),
                 callback::onAcknowledgePurchaseResponse
             )
+        }
+    }
+
+    private fun queryActivePurchasesForType(
+        params: QueryPurchasesParams,
+        listener: PurchasesResponseListener
+    ) {
+        onConnected {
+            billingClient.queryPurchasesAsync(params, listener)
+        }
+    }
+
+    fun queryActivePurchases(listener: OnQueryActivePurchasesListener) {
+        queryActivePurchasesForType(
+            QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.SUBS)
+                .build()
+        ) { billingResult, activeSubsList ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                listener.onSuccess(activeSubsList)
+            } else {
+                listener.onFailure(
+                    Error(billingResult.responseCode, billingResult.debugMessage)
+                )
+            }
         }
     }
 
