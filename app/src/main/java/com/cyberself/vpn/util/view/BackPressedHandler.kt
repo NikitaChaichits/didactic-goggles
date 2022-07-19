@@ -2,6 +2,7 @@ package com.cyberself.vpn.util.view
 
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings.Global.getString
 import androidx.activity.addCallback
 import androidx.fragment.app.FragmentActivity
 import com.cyberself.vpn.R
@@ -12,7 +13,7 @@ fun onBackPressedListener(activity: FragmentActivity) {
     activity.onBackPressedDispatcher.addCallback(activity) {
         if (isSecondaryTap) activity.finish()
         else {
-            activity.toast(R.string.tap_to_exit)
+            activity.toast("Press Back again to exit.")
             handleTaps()
         }
         isEnabled = true

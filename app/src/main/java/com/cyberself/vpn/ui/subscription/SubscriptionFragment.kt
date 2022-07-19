@@ -3,13 +3,15 @@ package com.cyberself.vpn.ui.subscription
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.SkuDetails
 import com.cyberself.vpn.R
 import com.cyberself.vpn.common.base.BaseFragment
 import com.cyberself.vpn.data.source.local.SharedPreferencesDataSource
@@ -17,14 +19,16 @@ import com.cyberself.vpn.databinding.FragmentSubscriptionBinding
 import com.cyberself.vpn.domain.billing.BillingClientWrapper
 import com.cyberself.vpn.util.view.Subscription
 import com.cyberself.vpn.util.view.invisible
+import com.cyberself.vpn.util.view.openWebView
 import com.cyberself.vpn.util.view.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
-    BillingClientWrapper.OnPurchaseListener {
+    BillingClientWrapper.OnPurchaseListener, BillingClientWrapper.OnQueryActivePurchasesListener {
 
     lateinit var prefs: SharedPreferencesDataSource
 
@@ -54,7 +58,7 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
     }
 
     private val purchaseButtonsMap: Map<String, Subscription> by lazy(LazyThreadSafetyMode.NONE) {
-        if (args.isThreeTypesSubscription){
+        if (args.isThreeTypesSubscription) {
             mapOf(
                 "premium_sub_annual" to binding.subscriptionAnnual,
                 "premium_sub_month" to binding.subscriptionMonthly,
@@ -76,7 +80,10 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
                     purchaseButtonsMap[product.sku]?.apply {
                         setOnClickListener {
                             billingClientWrapper.purchase(requireActivity(), product)
-                            Log.d("SubscriptionFragment", "${product.description} for ${product.price}")
+                            Log.d(
+                                "SubscriptionFragment",
+                                "${product.description} for ${product.price}"
+                            )
                         }
                     }
                 }
@@ -84,8 +91,9 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
 
             override fun onFailure(error: BillingClientWrapper.Error) {
                 if (error.responseCode != BillingClient.BillingResponseCode.OK
-                    && error.responseCode != BillingClient.BillingResponseCode.USER_CANCELED) {
-//                    Toast.makeText(requireContext(), "Error! ${error.debugMessage}", Toast.LENGTH_LONG).show()
+                    && error.responseCode != BillingClient.BillingResponseCode.USER_CANCELED
+                ) {
+                    Toast.makeText(requireContext(), "Error! ${error.debugMessage}", Toast.LENGTH_LONG).show()
                 }
 
                 Log.e("SubscriptionFragment", "Error: ${error.debugMessage}")
@@ -108,6 +116,7 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
 
     private fun initListeners() {
         with(binding) {
+            tvPurchased.setOnClickListener { checkSubscription() }
             btnContinue.setOnClickListener {
                 navigate(R.id.action_subscription_fragment_to_main_fragment)
             }
@@ -117,7 +126,10 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
             subscriptionWeek.setOnClickListener { onSubscriptionClick(it as Subscription) }
             subscriptionMonthly.setOnClickListener { onSubscriptionClick(it as Subscription) }
             subscriptionAnnual.setOnClickListener { onSubscriptionClick(it as Subscription) }
-            tvTerms.setOnClickListener { openWebView("https://cyberself-vpn.com/terms.html") }
+            tvTerms.setOnClickListener {
+                webView.openWebView("https://cyberself-vpn.com/terms.html")
+                isWebViewVisible = true
+            }
         }
     }
 
@@ -128,26 +140,40 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
         view.setCheckedStyle(true)
     }
 
-    private fun openWebView(url: String) {
-        binding.webView.run {
-            webViewClient = WebViewClient()
-            loadUrl(url)
-            settings.javaScriptEnabled = true
-            settings.setSupportZoom(true)
-            visible()
-            isWebViewVisible = true
+    private fun checkSubscription() {
+        if (prefs.getIsPremium()) {
+            toast(getString(R.string.subscription_exists))
+        } else {
+            billingClientWrapper.queryActivePurchases(this)
         }
     }
 
     override fun onPurchaseSuccess(purchase: Purchase?) {
-        //handle successful purchase
+        // handle successful purchase
         prefs.setIsPremium(true)
         navigate(R.id.action_subscription_fragment_to_main_fragment)
         Log.i("SubscriptionFragment", "onPurchaseSuccess!")
     }
 
     override fun onPurchaseFailure(error: BillingClientWrapper.Error) {
-        //handle error or user cancelation
+        // handle error or user cancelation
+        Log.e("SubscriptionFragment", "Error: ${error.debugMessage}")
+    }
+
+    override fun onSuccess(activePurchases: List<Purchase>) {
+        // handle successful restore
+        prefs.setIsPremium(true)
+        toast(getString(R.string.restore_successfully))
+        lifecycleScope.launchWhenResumed {
+            delay(1000L)
+            navigate(R.id.action_subscription_fragment_to_main_fragment)
+        }
+        Log.i("SubscriptionFragment", "onPurchaseSuccess!")
+    }
+
+    override fun onFailure(error: BillingClientWrapper.Error) {
+        // handle error while restore
+        toast(getString(R.string.error_restore))
         Log.e("SubscriptionFragment", "Error: ${error.debugMessage}")
     }
 

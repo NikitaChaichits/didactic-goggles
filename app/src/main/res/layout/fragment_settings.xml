@@ -31,8 +31,9 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivBanner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="155dp"
         android:layout_marginTop="@dimen/common_offset_xl"
+        android:layout_marginHorizontal="@dimen/common_offset_m"
         android:scaleType="fitXY"
         app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:srcCompat="@drawable/banner" />

@@ -15,8 +15,7 @@ import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SplashFragment : BaseFragment(R.layout.fragment_splash),
-    BillingClientWrapper.OnQueryActivePurchasesListener {
+class SplashFragment : BaseFragment(R.layout.fragment_splash) {
 
     override val viewModel: SplashViewModel by viewModels()
 
@@ -32,7 +31,6 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash),
             delay(3000L)
             checkFirstLaunch()
         }
-        checkSubscription()
     }
 
     private fun checkFirstLaunch() {
@@ -43,21 +41,4 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash),
             navigate(R.id.action_splash_fragment_to_main_fragment)
         }
     }
-
-    private fun checkSubscription() {
-        prefs.setIsPremium(false)
-        billingClientWrapper.queryActivePurchases(this)
-    }
-
-    override fun onSuccess(activePurchases: List<Purchase>) {
-        if (activePurchases.isNotEmpty()){
-            prefs.setIsPremium(true)
-        }
-        Log.d("SubscriptionFragment", "active purchases = $activePurchases")
-    }
-
-    override fun onFailure(error: BillingClientWrapper.Error) {
-        Log.e("SubscriptionFragment", "message = ${error.debugMessage}")
-    }
-
 }

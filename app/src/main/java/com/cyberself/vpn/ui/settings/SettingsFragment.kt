@@ -4,25 +4,33 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.android.billingclient.api.Purchase
 import com.cyberself.vpn.R
 import com.cyberself.vpn.common.base.BaseFragment
 import com.cyberself.vpn.data.source.local.SharedPreferencesDataSource
 import com.cyberself.vpn.databinding.FragmentSettingsBinding
+import com.cyberself.vpn.domain.billing.BillingClientWrapper
 import com.cyberself.vpn.util.log
 import com.cyberself.vpn.util.view.invisible
+import com.cyberself.vpn.util.view.openWebView
 import com.cyberself.vpn.util.view.visible
 import javax.inject.Inject
 
 
-class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
+class SettingsFragment : BaseFragment(R.layout.fragment_settings),
+    BillingClientWrapper.OnQueryActivePurchasesListener {
 
     @Inject
     lateinit var prefs: SharedPreferencesDataSource
+
+    @Inject
+    lateinit var billingClientWrapper: BillingClientWrapper
 
     private val binding by viewBinding(FragmentSettingsBinding::bind)
     override val viewModel: SettingsFragmentViewModel by viewModels()
@@ -37,6 +45,8 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         }
         initListeners()
         onBackPressed()
+
+        billingClientWrapper = BillingClientWrapper(view.context)
     }
 
     private fun onBackPressed() {
@@ -65,6 +75,9 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
             btnCheckConnection.setOnClickListener {
                 navigate(R.id.action_settings_fragment_to_speed_test_fragment)
             }
+            btnRestorePurchase.setOnClickListener {
+                checkSubscription()
+            }
             btnContactSupport.setOnClickListener {
                 navigate(R.id.action_settings_fragment_to_support_fragment)
             }
@@ -72,10 +85,12 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                 goToPlayMarket()
             }
             btnPrivacyPolicy.setOnClickListener {
-                openWebView("https://cyberself-vpn.com/policy.html")
+                webView.openWebView("https://cyberself-vpn.com/policy.html")
+                isWebViewVisible = true
             }
             btnTerms.setOnClickListener {
-                openWebView("https://cyberself-vpn.com/terms.html")
+                webView.openWebView("https://cyberself-vpn.com/terms.html")
+                isWebViewVisible = true
             }
             btnShare.setOnClickListener {
                 shareApp()
@@ -118,14 +133,24 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         }
     }
 
-    private fun openWebView(url: String) {
-        binding.webView.run {
-            webViewClient = WebViewClient()
-            loadUrl(url)
-            settings.javaScriptEnabled = true
-            settings.setSupportZoom(true)
-            visible()
-            isWebViewVisible = true
+    private fun checkSubscription() {
+        if (prefs.getIsPremium()) {
+            toast(getString(R.string.subscription_exists))
+        } else{
+            billingClientWrapper.queryActivePurchases(this)
         }
+    }
+
+    override fun onSuccess(activePurchases: List<Purchase>) {
+        // handle successful restore
+        prefs.setIsPremium(true)
+        navigate(R.id.action_subscription_fragment_to_main_fragment)
+        Log.i("SubscriptionFragment", "onPurchaseSuccess!")
+    }
+
+    override fun onFailure(error: BillingClientWrapper.Error) {
+        // handle error while restore
+        toast(getString(R.string.error_restore))
+        Log.e("SubscriptionFragment", "Error: ${error.debugMessage}")
     }
 }

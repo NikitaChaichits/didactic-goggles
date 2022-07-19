@@ -1,6 +1,7 @@
 package com.cyberself.vpn.ui.main
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -92,6 +93,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
     override fun onPause() {
         LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(broadcastReceiver)
         super.onPause()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
+            startVpn()
+        }
     }
 
     private fun initAll() {
@@ -314,7 +322,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
                 if (intent != null) {
                     startActivityForResult(intent, 1)
                 } else {
-                    //have already permission
+                    // have already permission
                     // Update confection status
                     startVpn()
                 }

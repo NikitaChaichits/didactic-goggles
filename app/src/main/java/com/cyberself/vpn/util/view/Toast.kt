@@ -11,9 +11,9 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import com.cyberself.vpn.R
 
-fun Context.toast(@StringRes messageStringRes: Int) {
+fun Context.toast(message: String) {
 
-    val toast = Toast.makeText(this, messageStringRes, Toast.LENGTH_SHORT)
+    val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
     val view = toast.view
     val text = view?.findViewById(android.R.id.message) as TextView?
     val color = getColor(this, R.color.colorAccent)

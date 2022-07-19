@@ -76,7 +76,6 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/common_offset_xs"
             app:description="@string/fr_subscription_description1"
-            app:isChecked="true"
             app:name="@string/fr_subscription_type1" />
 
         <com.cyberself.vpn.util.view.Subscription
