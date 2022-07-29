@@ -7,6 +7,7 @@
     <string name="error_restore">Cann\'t restore your purchase</string>
     <string name="restore_successfully">Restore successfully</string>
     <string name="subscription_exists">You already have subscription</string>
+    <string name="subscription_not_exists">You have not active subscription</string>
 
     <!-- Permission -->
 

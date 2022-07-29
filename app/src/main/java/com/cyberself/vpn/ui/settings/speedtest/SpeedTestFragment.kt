@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
-class SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
+class   SpeedTestFragment : BaseFragment(R.layout.fragment_speed_test) {
 
     private val binding by viewBinding(FragmentSpeedTestBinding::bind)
     override val viewModel: SpeedTestViewModel by viewModels()

@@ -22,7 +22,9 @@ import com.cyberself.vpn.util.view.invisible
 import com.cyberself.vpn.util.view.openWebView
 import com.cyberself.vpn.util.view.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -54,7 +56,6 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
         onBackPressed()
 
         billingClientWrapper.onPurchaseListener = this
-        displayProducts()
     }
 
     private val purchaseButtonsMap: Map<String, Subscription> by lazy(LazyThreadSafetyMode.NONE) {
@@ -70,7 +71,6 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
                 "premium_sub_month" to binding.subscriptionMonthly
             )
         }
-
     }
 
     private fun displayProducts() {
@@ -93,7 +93,9 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
                 if (error.responseCode != BillingClient.BillingResponseCode.OK
                     && error.responseCode != BillingClient.BillingResponseCode.USER_CANCELED
                 ) {
-                    Toast.makeText(requireContext(), "Error! ${error.debugMessage}", Toast.LENGTH_LONG).show()
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        toast("Error! ${error.debugMessage}")
+                    }
                 }
 
                 Log.e("SubscriptionFragment", "Error: ${error.debugMessage}")
@@ -138,6 +140,7 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
         binding.subscriptionMonthly.setCheckedStyle(false)
         binding.subscriptionAnnual.setCheckedStyle(false)
         view.setCheckedStyle(true)
+        displayProducts()
     }
 
     private fun checkSubscription() {
@@ -162,18 +165,27 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
 
     override fun onSuccess(activePurchases: List<Purchase>) {
         // handle successful restore
-        prefs.setIsPremium(true)
-        toast(getString(R.string.restore_successfully))
-        lifecycleScope.launchWhenResumed {
-            delay(1000L)
-            navigate(R.id.action_subscription_fragment_to_main_fragment)
+        if (activePurchases.isNotEmpty()){
+            prefs.setIsPremium(true)
+            toast(getString(R.string.restore_successfully))
+            lifecycleScope.launchWhenResumed {
+                delay(1000L)
+                navigate(R.id.action_subscription_fragment_to_main_fragment)
+            }
+        } else {
+            lifecycleScope.launch(Dispatchers.Main) {
+                toast(getString(R.string.subscription_not_exists))
+            }
         }
+
         Log.i("SubscriptionFragment", "onPurchaseSuccess!")
     }
 
     override fun onFailure(error: BillingClientWrapper.Error) {
         // handle error while restore
-        toast(getString(R.string.error_restore))
+        lifecycleScope.launch(Dispatchers.Main) {
+            toast(getString(R.string.error_restore))
+        }
         Log.e("SubscriptionFragment", "Error: ${error.debugMessage}")
     }
 

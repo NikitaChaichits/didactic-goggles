@@ -28,7 +28,7 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
         super.onViewCreated(view, savedInstanceState)
         prefs = SharedPreferencesDataSource(view.context)
         lifecycleScope.launchWhenResumed {
-            delay(3000L)
+            delay(3000)
             checkFirstLaunch()
         }
     }

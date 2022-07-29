@@ -153,7 +153,7 @@ class BillingClientWrapper(context: Context) : PurchasesUpdatedListener {
     fun queryActivePurchases(listener: OnQueryActivePurchasesListener) {
         queryActivePurchasesForType(
             QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.SUBS)
+                .setProductType(BillingClient.SkuType.SUBS)
                 .build()
         ) { billingResult, activeSubsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
