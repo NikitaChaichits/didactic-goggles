@@ -95,12 +95,12 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         super.onPause()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
-            startVpn()
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
+//            startVpn()
+//        }
+//    }
 
     private fun initAll() {
         prefs = SharedPreferencesDataSource(requireContext())
@@ -331,6 +331,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             }
         } else if (stopVpn()) {
             showToast("Disconnect Successfully")
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
+            startVpn()
         }
     }
 
