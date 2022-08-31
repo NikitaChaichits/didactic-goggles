@@ -9,6 +9,7 @@ import android.view.View
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.billingclient.api.Purchase
 import com.cyberself.vpn.R
@@ -20,6 +21,9 @@ import com.cyberself.vpn.util.log
 import com.cyberself.vpn.util.view.invisible
 import com.cyberself.vpn.util.view.openWebView
 import com.cyberself.vpn.util.view.visible
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -143,8 +147,19 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings),
 
     override fun onSuccess(activePurchases: List<Purchase>) {
         // handle successful restore
-        prefs.setIsPremium(true)
-        navigate(R.id.action_subscription_fragment_to_main_fragment)
+        if (activePurchases.isNotEmpty()){
+            prefs.setIsPremium(true)
+            toast(getString(R.string.restore_successfully))
+            lifecycleScope.launchWhenResumed {
+                delay(1000L)
+                navigateBack()
+            }
+        } else {
+            lifecycleScope.launch(Dispatchers.Main) {
+                toast(getString(R.string.subscription_not_exists))
+            }
+        }
+
         Log.i("SubscriptionFragment", "onPurchaseSuccess!")
     }
 

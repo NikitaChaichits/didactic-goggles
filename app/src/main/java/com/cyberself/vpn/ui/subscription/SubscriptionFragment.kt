@@ -56,7 +56,6 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
         onBackPressed()
 
         billingClientWrapper.onPurchaseListener = this
-        displayProducts()
     }
 
     private val purchaseButtonsMap: Map<String, Subscription> by lazy(LazyThreadSafetyMode.NONE) {
@@ -72,7 +71,6 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
                 "premium_sub_month" to binding.subscriptionMonthly
             )
         }
-
     }
 
     private fun displayProducts() {
@@ -142,6 +140,7 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
         binding.subscriptionMonthly.setCheckedStyle(false)
         binding.subscriptionAnnual.setCheckedStyle(false)
         view.setCheckedStyle(true)
+        displayProducts()
     }
 
     private fun checkSubscription() {

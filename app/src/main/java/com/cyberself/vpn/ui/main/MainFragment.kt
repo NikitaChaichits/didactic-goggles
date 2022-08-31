@@ -67,10 +67,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         observeViewModels()
     }
 
-    /**
-     * Change server when user select new server
-     * @param server ovpn server details
-     */
     override fun newServer() {
         if (vpnStart) {
             stopVpn()
@@ -94,13 +90,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
         LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(broadcastReceiver)
         super.onPause()
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
-//            startVpn()
-//        }
-//    }
 
     private fun initAll() {
         prefs = SharedPreferencesDataSource(requireContext())
@@ -343,10 +332,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
 
     private fun startVpn() {
         try {
-            // .ovpn file
-            val conf: InputStream = StringBufferInputStream(config)
-            val isr = InputStreamReader(conf)
-            val br = BufferedReader(isr)
+            val br = BufferedReader(InputStreamReader(ByteArrayInputStream(config.toByteArray())))
             var config = ""
             var line: String?
             while (true) {
@@ -359,13 +345,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), ChangeServer {
             }
             br.readLine()
 
-            OpenVpnApi.startVpn(
-                context,
-                config,
-                country,
-                "vpn",
-                "vpn"
-            )
+            OpenVpnApi.startVpn(context, config, country, "vpn", "vpn")
 
             viewModel.setVpnStart(true)
         } catch (e: IOException) {
