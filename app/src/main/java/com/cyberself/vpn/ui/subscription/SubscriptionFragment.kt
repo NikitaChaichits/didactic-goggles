@@ -1,7 +1,9 @@
 package com.cyberself.vpn.ui.subscription
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
@@ -114,6 +116,7 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
             })
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initListeners() {
         with(binding) {
             tvPurchased.setOnClickListener { checkSubscription() }
@@ -123,9 +126,24 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
             ivClose.setOnClickListener {
                 navigate(R.id.action_subscription_fragment_to_main_fragment)
             }
-            subscriptionWeek.setOnClickListener { onSubscriptionClick(it as Subscription) }
-            subscriptionMonthly.setOnClickListener { onSubscriptionClick(it as Subscription) }
-            subscriptionAnnual.setOnClickListener { onSubscriptionClick(it as Subscription) }
+            subscriptionWeek.setOnTouchListener { view, event ->
+                if (event.action == MotionEvent.ACTION_DOWN ||
+                    event.action == MotionEvent.ACTION_MOVE)
+                    onSubscriptionClick(view as Subscription)
+                return@setOnTouchListener true
+            }
+            subscriptionMonthly.setOnTouchListener { view, event ->
+                if (event.action == MotionEvent.ACTION_DOWN ||
+                    event.action == MotionEvent.ACTION_MOVE)
+                    onSubscriptionClick(view as Subscription)
+                return@setOnTouchListener true
+            }
+            subscriptionAnnual.setOnTouchListener { view, event ->
+                if (event.action == MotionEvent.ACTION_DOWN ||
+                    event.action == MotionEvent.ACTION_MOVE)
+                    onSubscriptionClick(view as Subscription)
+                return@setOnTouchListener true
+            }
             tvTerms.setOnClickListener {
                 webView.openWebView("https://cyberself-vpn.com/terms.html")
                 isWebViewVisible = true
@@ -165,8 +183,8 @@ class SubscriptionFragment : BaseFragment(R.layout.fragment_subscription),
         // handle successful restore
         if (activePurchases.isNotEmpty()){
             prefs.setIsPremium(true)
-            toast(getString(R.string.restore_successfully))
-            lifecycleScope.launchWhenResumed {
+            lifecycleScope.launch(Dispatchers.Main) {
+                toast(getString(R.string.restore_successfully))
                 delay(1000L)
                 navigate(R.id.action_subscription_fragment_to_main_fragment)
             }

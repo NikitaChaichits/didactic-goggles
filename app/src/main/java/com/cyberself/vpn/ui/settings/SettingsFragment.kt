@@ -149,8 +149,8 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings),
         // handle successful restore
         if (activePurchases.isNotEmpty()){
             prefs.setIsPremium(true)
-            toast(getString(R.string.restore_successfully))
-            lifecycleScope.launchWhenResumed {
+            lifecycleScope.launch(Dispatchers.Main) {
+                toast(getString(R.string.restore_successfully))
                 delay(1000L)
                 navigateBack()
             }
